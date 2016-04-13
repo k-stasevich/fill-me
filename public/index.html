@@ -1,0 +1,33 @@
+<html ng-app="app">
+<head>
+  <!-- CSS -->
+  <link rel="stylesheet" href="build/css/main.css">
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+
+  <!-- LIBS -->
+  <script type="text/javascript" src="node_modules/angular/angular.min.js"></script>
+  <script type="text/javascript" src="node_modules/angular-route/angular-route.min.js"></script>
+
+  <!-- APP -->
+  <script type="text/javascript" src="build/js/app.js"></script>
+
+  <!-- CONTROLLERS -->
+  <script type="text/javascript" src="build/js/pages/home/home-ctrl.js"></script>
+
+  <!-- SERVICES -->
+
+  <!-- DIRECTIVES -->
+  <script type="text/javascript" src="build/js/directives/header/header-dir.js"></script>
+
+  <!-- CONSTANTS -->
+  <script type="text/javascript" src="build/js/constants/route-constants.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+  <header></header>
+
+  <ng-view></ng-view>
+</div>
+
+</body>
+</html>
