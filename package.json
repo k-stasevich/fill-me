@@ -10,6 +10,7 @@
     "express-validator": "2.19.1",
     "html": "0.0.10",
     "jsonwebtoken": "5.5.4",
+    "mysql": "^2.10.2",
     "sequelize": "3.18.0",
     "sequelize-cli": "2.3.1"
   }

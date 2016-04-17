@@ -1,7 +1,7 @@
 {
   "username": "root",
-  "password": "911a911a",
+  "password": "root",
   "host": "localhost",
-  "database": "DT",
+  "database": "test_bd",
   "dialect": "mysql"
 }
