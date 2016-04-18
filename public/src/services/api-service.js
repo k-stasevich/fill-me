@@ -21,13 +21,10 @@
 
           return new Promise((resolve, reject) => {
             $http(options)
-              .then((response) => {
-                if (response.status === 200) {
-                  return resolve(response.data);
-                }
-
-                return reject(response);
-              });
+              .then(
+                (response) => resolve(response.data),
+                (error) => reject(error)
+              );
           });
         };
       }]);

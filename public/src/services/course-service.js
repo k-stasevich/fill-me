@@ -4,17 +4,30 @@
   angular
     .module('app')
     .service('CourseService', ['ApiService', function(ApiService) {
-      this.courses = [];
+      let courses = [];
+      let authorizedCourse = {};
 
       this.init = function() {
         return ApiService.request('/api/course', 'GET')
           .then((response) => {
-            this.courses = response.data;
+            courses = response.data;
           });
       };
 
+      this.auth = function(courseId, password) {
+        return ApiService.request('/api/auth', 'POST', {
+            courseId: courseId,
+            password: password
+          })
+          .then((response) => {
+            authorizedCourse = courses.find((item) => item.courseId = courseId);
+            return response;
+          })
+          .catch((err) => Promise.reject(err));
+      };
+
       this.getCourses = function() {
-        return this.courses;
+        return courses;
       }
     }]);
 })();

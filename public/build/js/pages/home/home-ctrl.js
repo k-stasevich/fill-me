@@ -3,14 +3,19 @@
 (function () {
   'use strict';
 
-  angular.module('app').controller('HomeCtrl', ['$scope', 'CourseService', function ($scope, CourseService) {
+  angular.module('app').controller('HomeCtrl', ['$scope', '$location', 'CourseService', function ($scope, $location, CourseService) {
     this.courses = CourseService.getCourses();
     this.selectedCourse = this.courses[0].courseId.toString();
-    console.log(this.selectedCourse);
+    this.auth = function () {
+      var _this = this;
 
-    this.changeCourse = function () {
-      console.log(this.selectedCourse);
-      console.log('adfasdf');
+      CourseService.auth(+this.selectedCourse, this.password).then(function () {
+        $location.path('/course-profile');
+        $scope.$apply();
+      }).catch(function () {
+        _this.authError = 'Неверный пароль';
+        $scope.$apply();
+      });
     };
   }]);
 })();

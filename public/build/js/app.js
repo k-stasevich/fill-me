@@ -13,6 +13,10 @@
       resolve: ['CourseService', function (CourseService) {
         return CourseService.init();
       }]
+    }).when('/course-profile', {
+      templateUrl: 'build/js/pages/course-profile/course-profile.html',
+      controller: 'CourseProfileCtrl',
+      controllerAs: 'courseProfile'
     });
   }]);
 })();

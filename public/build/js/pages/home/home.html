@@ -12,16 +12,26 @@
       <form>
         <div class="form-group">
           <label>Курс</label>
-          <select class="form-control" ng-model="home.selectedCourse" ng-change="home.changeCourse()">
-            <option ng-repeat="course in home.courses" value={{course.courseId.toString()}}>{{course.courseType}}</option>
+          <select class="form-control" ng-model="home.selectedCourse">
+            <option ng-repeat="course in home.courses" value={{course.courseId.toString()}}>
+              {{course.courseType}}
+            </option>
           </select>
         </div>
 
         <div class="form-group">
           <label>Пароль</label>
-          <input type="password" ng-model="homeCtrl.password" class="form-control">
+          <input type="password" ng-model="home.password" class="form-control">
         </div>
+
+        <button type="button" class="btn btn-primary" ng-click="home.auth()">Войти</button>
       </form>
+    </div>
+  </div>
+
+  <div class="row" ng-if="home.authError">
+    <div class="col-xs-8 col-xs-offset-2 col-md-4 col-md-offset-4">
+      <div class="alert alert-danger">{{home.authError}}</div>
     </div>
   </div>
 </div>
