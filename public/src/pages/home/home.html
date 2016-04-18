@@ -12,9 +12,8 @@
       <form>
         <div class="form-group">
           <label>Курс</label>
-          <select class="form-control" ng-model="homeCtrl.course">
-            <option value="IOSU">ИОСУ</option>
-            <option value="TM">Телмеханика</option>
+          <select class="form-control" ng-model="home.selectedCourse" ng-change="home.changeCourse()">
+            <option ng-repeat="course in home.courses" value={{course.courseId.toString()}}>{{course.courseType}}</option>
           </select>
         </div>
 

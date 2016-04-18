@@ -9,7 +9,10 @@
     $routeProvider.when('/', {
       templateUrl: 'build/js/pages/home/home.html',
       controller: 'HomeCtrl',
-      controllerAs: 'home'
+      controllerAs: 'home',
+      resolve: ['CourseService', function (CourseService) {
+        return CourseService.init();
+      }]
     });
   }]);
 })();

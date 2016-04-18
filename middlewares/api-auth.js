@@ -4,7 +4,7 @@ const webTokenService = require('../services/web-token-service');
 const ERROR_CONSTANTS = require('../constants/error-constants');
 
 module.exports = function(app) {
-  app.use('/api', apiAuth);
+  app.use('/api/sec', apiAuth);
 };
 
 function apiAuth(req, res, next) {
