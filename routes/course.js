@@ -7,7 +7,8 @@ const ERRORS = require('../constants/error-constants');
 
 module.exports = function(app) {
   app.route('/api/course')
-    .get(getCourses);
+    .get(getCourses)
+    .put(editCourse);
 
   app.route('/api/auth')
     .post(auth);
@@ -16,6 +17,23 @@ module.exports = function(app) {
 function getCourses(req, res) {
   return courseService.getCourses()
     .then((courses) => res.json({ success: true, data: courses }));
+}
+
+function editCourse(req, res) {
+  const errors = courseValidator.validateForUpdate(req);
+
+  if (errors) {
+    return res.status(400).json({ errors: errors });
+  }
+
+  return courseService.update({
+      numberOfQuestions: req.body.numberOfQuestions,
+      percentForSuccess: req.body.percentForSuccess,
+      timeForExecuting: req.body.timeForExecuting,
+      maxNumberOfAttemps: req.body.maxNumberOfAttemps
+    }, req.body.courseId)
+    .then((updatedCourse) => res.json({ success: true, data: updatedCourse }))
+    .catch((err) => res.status(400).json({ message: ERRORS.BAD_REQUEST }));
 }
 
 function auth(req, res) {

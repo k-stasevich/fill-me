@@ -26,6 +26,24 @@
           .catch((err) => Promise.reject(err));
       };
 
+      this.updateCourse = function(updates) {
+        return ApiService.request('/api/course', 'PUT', {
+            courseId: authorizedCourse.courseId,
+            percentForSuccess: updates.percentForSuccess,
+            timeForExecuting: updates.timeForExecuting,
+            maxNumberOfAttemps: updates.maxNumberOfAttemps,
+            numberOfQuestions: updates.numberOfQuestions
+          })
+          .then((response) => {
+            authorizedCourse = response.data;
+            const updatedCourseIndex = courses.findIndex((item) => item.courseId === authorizedCourse.courseId);
+            courses[updatedCourseIndex] = authorizedCourse;
+
+            return authorizedCourse;
+          })
+          .catch((err) => Promise.reject(err));
+      };
+
       this.getCourses = function() {
         return courses;
       };
