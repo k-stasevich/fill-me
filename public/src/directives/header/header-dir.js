@@ -6,11 +6,19 @@
     .directive('header', function() {
       return {
         restrict: 'E',
-        link: function(scope, element, attrs) {
+        templateUrl: 'build/js/directives/header/header.html',
+        replace: true,
+        link: function(scope, element, attrs, ctrl) {
 
         },
-        templateUrl: 'build/js/directives/header/header.html',
-        replace: true
+        controller: ['$scope', function($scope) {
+          let vm = this;
+
+          $scope.$on('auth', function(event, data) {
+            vm.authenticatedCourse = data;
+          });
+        }],
+        controllerAs: 'header'
       }
     })
 })();

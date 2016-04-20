@@ -28,6 +28,10 @@
 
       this.getCourses = function() {
         return courses;
-      }
+      };
+
+      this.getAuthorizedCourse = function() {
+        return authorizedCourse;
+      };
     }]);
 })();

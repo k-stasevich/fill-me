@@ -1,9 +1,9 @@
 (function() {
-	'use strict';
+  'use strict';
 
-	angular
+  angular
     .module('app')
-    .controller('CourseProfileCtrl', [function() {
-
+    .controller('CourseProfileCtrl', ['$scope', 'CourseService', function($scope, CourseService) {
+      $scope.$emit('auth', CourseService.getAuthorizedCourse());
     }])
 })();
