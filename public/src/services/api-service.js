@@ -6,6 +6,8 @@
     .service('ApiService', [
       '$http',
       function($http) {
+        let token = '';
+
         this.request = function(url, method, data) {
           let options = {
             url: url,
@@ -14,6 +16,10 @@
               'Content-Type': 'application/json'
             }
           };
+
+          if (token) {
+            options.headers['x-token'] = token;
+          }
 
           if (data) {
             options.data = data;
@@ -27,6 +33,19 @@
               );
           });
         };
+
+        this.isAuthenticated = function() {
+          return !!token;
+        };
+
+        this.auth = function(data) {
+          return this.request('/api/auth', 'POST', data)
+            .then((response) => {
+              token = response.token;
+              return response;
+            })
+            .catch((err) => Promise.reject(err))
+        }
       }]);
 
 })();

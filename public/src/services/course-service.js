@@ -15,7 +15,7 @@
       };
 
       this.auth = function(courseId, password) {
-        return ApiService.request('/api/auth', 'POST', {
+        return ApiService.auth({
             courseId: courseId,
             password: password
           })
