@@ -2,32 +2,47 @@
   <div class="row">
     <div class="col-sm-12">
       <uib-tabset>
-        <uib-tab heading="Настройка">
+        <uib-tab heading="Настройка" select="courseProfile.resetOfInputs()">
           <div class="row">
             <div class="col-sm-4 col-sm-offset-4">
               <form>
                 <div class="form-group">
                   <label>Процент сдачи</label>
-                  <input type="number" ng-model="courseProfile.settings.percentForSuccess" class="form-control">
+                  <input type="number" ng-model="courseProfile.settings.percentForSuccess.current" class="form-control">
                 </div>
 
                 <div class="form-group">
                   <label>Время выполнения (мин)</label>
-                  <input type="number" ng-model="courseProfile.settings.timeForExecuting" class="form-control">
+                  <input type="number" ng-model="courseProfile.settings.timeForExecuting.current" class="form-control">
                 </div>
 
                 <div class="form-group">
                   <label>Колличество попыток в день</label>
-                  <input type="number" ng-model="courseProfile.settings.maxNumberOfAttemps" class="form-control">
+                  <input type="number" ng-model="courseProfile.settings.maxNumberOfAttemps.current" class="form-control">
                 </div>
 
                 <div class="form-group">
                   <label>Колличество вопросов в тесте</label>
-                  <input type="number" ng-model="courseProfile.settings.numberOfQuestions" class="form-control">
+                  <input type="number" ng-model="courseProfile.settings.numberOfQuestions.current" class="form-control">
                 </div>
 
                 <button type="button" class="btn btn-primary" ng-click="courseProfile.updateCourse()">Сохранить</button>
+                <button type="button" class="btn btn-primary" ng-click="courseProfile.resetOfInputsWithApply()">Cброс</button>
               </form>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+              <div class="alert alert-success" ng-show="courseProfile.succesfullyChanged">Конфигурации успешно изменены!</div>
+              <div class="alert alert-danger" ng-show="courseProfile.errors.percentForSuccess ||
+              courseProfile.errors.maxNumberOfAttemps ||
+              courseProfile.errors.timeForExecuting ||
+              courseProfile.errors.numberOfQuestions">
+                <div ng-show="courseProfile.errors.percentForSuccess">Процент успеха: введите значение от 20 до 100</div>
+                <div ng-show="courseProfile.errors.maxNumberOfAttemps">Время выполнения: введите значение от 5 до 120</div>
+                <div ng-show="courseProfile.errors.timeForExecuting">Колличество попыток в день: введите значение от 1 до 10</div>
+                <div ng-show="courseProfile.errors.numberOfQuestions">Колличество вопросов в тесте: введите значение от 1 до 30</div>
+              </div>
             </div>
           </div>
         </uib-tab>

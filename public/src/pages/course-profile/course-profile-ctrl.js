@@ -7,22 +7,69 @@
       let vm = this;
 
       vm.settings = {
-        percentForSuccess: CourseService.getAuthorizedCourse().percentForSuccess,
-        timeForExecuting: CourseService.getAuthorizedCourse().timeForExecuting,
-        maxNumberOfAttemps: CourseService.getAuthorizedCourse().maxNumberOfAttemps,
-        numberOfQuestions: CourseService.getAuthorizedCourse().numberOfQuestions
+        percentForSuccess: {
+          current: CourseService.getAuthorizedCourse().percentForSuccess,
+          real: CourseService.getAuthorizedCourse().percentForSuccess
+        },
+        timeForExecuting: {
+          current: CourseService.getAuthorizedCourse().timeForExecuting,
+          real: CourseService.getAuthorizedCourse().timeForExecuting
+        },
+        maxNumberOfAttemps: {
+          current: CourseService.getAuthorizedCourse().maxNumberOfAttemps,
+          real: CourseService.getAuthorizedCourse().maxNumberOfAttemps
+        },
+        numberOfQuestions: {
+          current: CourseService.getAuthorizedCourse().numberOfQuestions,
+          real: CourseService.getAuthorizedCourse().numberOfQuestions
+        }
       };
 
+      vm.errors = {};
+      vm.succesfullyChanged = false;
+
       vm.updateCourse = function() {
-        return CourseService.updateCourse(vm.settings)
+        return CourseService.updateCourse({
+            percentForSuccess: vm.settings.percentForSuccess.current,
+            timeForExecuting: vm.settings.timeForExecuting.current,
+            maxNumberOfAttemps: vm.settings.maxNumberOfAttemps.current,
+            numberOfQuestions: vm.settings.numberOfQuestions.current
+          })
           .then((updatedCourse) => {
+            vm.errors = {};
+            vm.succesfullyChanged = true;
+            changeRealValues();
+            $scope.$apply();
           })
           .catch((err) => {
-            console.log('COURSE PROFILE UPDATE COURSE ERROR');
-            console.log(err);
+            vm.succesfullyChanged = false;
+            if (err.status === 400) {
+              err.data.errors.forEach((item) => {
+                vm.errors[item.param] = item.msg;
+                $scope.$apply();
+              });
+            }
           });
       };
-      
+
+      vm.resetOfInputs = function() {
+        for (let prop in vm.settings) {
+          vm.settings[prop].current = vm.settings[prop].real;
+        }
+        vm.errors = {};
+        vm.succesfullyChanged = false;
+      };
+
+      vm.resetOfInputsWithApply = function () {
+        vm.resetOfInputs();
+      };
+
+      function changeRealValues() {
+        for (let prop in vm.settings) {
+          vm.settings[prop].real = vm.settings[prop].current;
+        }
+      }
+
       $scope.$emit('auth', CourseService.getAuthorizedCourse());
     }])
 })();
