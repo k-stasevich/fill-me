@@ -9,7 +9,9 @@ module.exports = {
         onUpdate: 'CASCADE', onDelete: 'CASCADE'
       },
       name: { type: Sequelize.STRING, allowNull: false },
-      number: { type: Sequelize.INTEGER, allowNull: false }
+      number: { type: Sequelize.INTEGER, allowNull: false },
+      createdAt: { type: Sequelize.DATE },
+      updatedAt: { type: Sequelize.DATE }
     });
   },
 

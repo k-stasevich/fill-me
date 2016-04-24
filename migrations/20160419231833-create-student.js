@@ -7,7 +7,9 @@ module.exports = {
       fio: { type: Sequelize.STRING, allowNull: false },
       grout_number: { type: Sequelize.STRING },
       min_cost: { type: Sequelize.INTEGER },
-      max_cost: { type: Sequelize.INTEGER }
+      max_cost: { type: Sequelize.INTEGER },
+      createdAt: { type: Sequelize.DATE },
+      updatedAt: { type: Sequelize.DATE }
     });
   },
 

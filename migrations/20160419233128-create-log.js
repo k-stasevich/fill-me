@@ -15,7 +15,9 @@ module.exports = {
         type: Sequelize.INTEGER, allowNull: false, references: { model: 'lab', key: 'lab_id' },
         onUpdate: 'CASCADE', onDelete: 'CASCADE'
       },
-      pc_ip: { type: Sequelize.STRING }
+      pc_ip: { type: Sequelize.STRING },
+      createdAt: { type: Sequelize.DATE },
+      updatedAt: { type: Sequelize.DATE }
     });
   },
 

@@ -23,7 +23,9 @@ module.exports = {
       answer3: { type: Sequelize.STRING },
       answer4: { type: Sequelize.STRING },
       answer5: { type: Sequelize.STRING },
-      answer: { type: Sequelize.STRING }
+      answer: { type: Sequelize.STRING },
+      createdAt: { type: Sequelize.DATE },
+      updatedAt: { type: Sequelize.DATE }
     });
   },
 
