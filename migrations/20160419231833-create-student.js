@@ -2,7 +2,7 @@
 
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    queryInterface.createTable('students_list', {
+    return queryInterface.createTable('student', {
       student_id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       fio: { type: Sequelize.STRING, allowNull: false },
       grout_number: { type: Sequelize.STRING },
@@ -12,6 +12,6 @@ module.exports = {
   },
 
   down: function(queryInterface, Sequelize) {
-    queryInterface.dropTable('students_list');
+    queryInterface.dropTable('student');
   }
 };

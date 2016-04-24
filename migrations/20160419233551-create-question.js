@@ -2,10 +2,10 @@
 
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    queryInterface.createTable('question_list', {
+    return queryInterface.createTable('question', {
       question_id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
-      fk_type_id: {
-        type: Sequelize.INTEGER, allowNull: false, references: { model: 'types_list', key: 'type_id' },
+      fk_question_type_id: {
+        type: Sequelize.INTEGER, allowNull: false, references: { model: 'question_type', key: 'type_id' },
         onUpdate: 'CASCADE', onDelete: 'CASCADE'
       },
       cost: { type: Sequelize.INTEGER, allowNull: false },
@@ -15,7 +15,7 @@ module.exports = {
       },
       adviser: { type: Sequelize.STRING },
       fk_lab_id: {
-        type: Sequelize.INTEGER, allowNull: false, references: { model: 'lab_list', key: 'lab_id' },
+        type: Sequelize.INTEGER, allowNull: false, references: { model: 'lab', key: 'lab_id' },
         onUpdate: 'CASCADE', onDelete: 'CASCADE'
       },
       answer1: { type: Sequelize.STRING },
@@ -28,6 +28,6 @@ module.exports = {
   },
 
   down: function(queryInterface, Sequelize) {
-    queryInterface.dropTable('question_list');
+    queryInterface.dropTable('question');
   }
 };
