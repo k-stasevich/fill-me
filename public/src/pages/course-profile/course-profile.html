@@ -48,7 +48,35 @@
         </uib-tab>
 
         <uib-tab heading="Вопросы">В разработке</uib-tab>
-        <uib-tab heading="Темы">В разработке</uib-tab>
+        <uib-tab heading="Темы">
+          <div class="container-fluid">
+            <div class="row" ng-controller="LabCtrl as lab">
+              <div class="col-sm-6 col-xs-6">
+                <div class="form-group">
+                  <label>Номер</label>
+                  <input type="number" ng-model="lab.newLab.number" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Имя темы/лабораторной работы</label>
+                  <input type="text" ng-model="lab.newLab.name" class="form-control">
+                </div>
+
+                <button type="button" class="btn btn-primary" ng-click="lab.addLab()">Добавить лабораторную работу</button>
+
+                <div class="alert alert-success" ng-show="lab.succesfullyChanged">Лабораторная работа успешно добавлена!</div>
+                <div class="alert alert-danger" ng-show="lab.errors.name || lab.errors.number">
+                  <div ng-show="lab.errors.name">Имя лабораторной работы: обязательно для заполнения</div>
+                  <div ng-show="lab.errors.number">Время выполнения: введите целое число от 1 до 10</div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xs-6">
+                <ul class="list-group">
+                  <li ng-repeat="lab in lab.labs" class="list-group-item"><b>{{lab.number}}</b>. {{lab.name}}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </uib-tab>
       </uib-tabset>
     </div>
   </div>

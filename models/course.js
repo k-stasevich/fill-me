@@ -10,7 +10,12 @@ module.exports = function(sequelize, DataTypes) {
     maxNumberOfAttemps: { type: DataTypes.INTEGER, field: 'MAX_NUMBER_OF_ATTEMPS' },
     numberOfQuestions: { type: DataTypes.INTEGER, field: 'NUMBER_OF_QUESTIONS' }
   }, {
-    freezeTableName: true
+    freezeTableName: true,
+    classMethods: {
+      associate: function(model) {
+        course.hasMany(model.lab);
+      }
+    }
   });
 
   return course;

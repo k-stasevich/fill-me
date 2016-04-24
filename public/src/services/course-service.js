@@ -27,7 +27,7 @@
       };
 
       this.updateCourse = function(updates) {
-        return ApiService.request('/api/course', 'PUT', {
+        return ApiService.request('/api/sec/course', 'PUT', {
             courseId: authorizedCourse.courseId,
             percentForSuccess: updates.percentForSuccess,
             timeForExecuting: updates.timeForExecuting,

@@ -13,9 +13,9 @@ function apiAuth(req, res, next) {
   if (token) {
     return webTokenService.verifyToken(token)
       .then(() => next())
-      .catch(() => Promise.reject(getForbiddenError()));
+      .catch(() => res.status(401).json(getForbiddenError()));
   } else {
-    return Promise.reject(getForbiddenError());
+    return res.status(401).json(getForbiddenError());
   }
 }
 
