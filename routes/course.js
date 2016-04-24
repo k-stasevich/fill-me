@@ -7,7 +7,9 @@ const ERRORS = require('../constants/error-constants');
 
 module.exports = function(app) {
   app.route('/api/course')
-    .get(getCourses)
+    .get(getCourses);
+
+  app.route('/api/sec/course')
     .put(editCourse);
 
   app.route('/api/auth')

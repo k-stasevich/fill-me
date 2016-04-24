@@ -20,7 +20,6 @@ module.exports = {
           });
         }
 
-        req.decoded = decoded;
         return resolve({ success: true });
       })
     });

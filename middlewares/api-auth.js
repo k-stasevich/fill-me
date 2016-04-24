@@ -8,7 +8,7 @@ module.exports = function(app) {
 };
 
 function apiAuth(req, res, next) {
-  const token = req.body.token || req.query.token || req.headers['x-access-token'];
+  const token = req.body.token || req.query.token || req.headers['x-token'];
 
   if (token) {
     return webTokenService.verifyToken(token)
