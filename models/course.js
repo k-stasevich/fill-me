@@ -13,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
     freezeTableName: true,
     classMethods: {
       associate: function(model) {
-        course.hasMany(model.lab);
+        course.hasMany(model.lab, { foreignKey: 'fk_course_id' });
       }
     }
   });

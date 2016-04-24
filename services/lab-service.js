@@ -4,6 +4,7 @@ const models = require('../models');
 
 module.exports = {
   addLab: function(courseId, lab) {
+    console.log(courseId);
     return models.lab.create({
         fk_course_id: courseId,
         name: lab.name,
