@@ -10,10 +10,7 @@
         vm.selectedLab = {};
         vm.labs = [];
 
-        vm.newLab = {
-          name: '',
-          number: 1
-        };
+        vm.newLab = getInitialStateForNewLab();
         resetErrors();
 
         LabService.loadLabs(CourseService.getAuthorizedCourse().courseId)
@@ -27,6 +24,7 @@
             .then(() => {
               vm.labs = LabService.getLabs();
               vm.succesfullyAdded = true;
+              vm.newLab = getInitialStateForNewLab();
               $scope.$apply();
             })
             .catch((errors) => {
@@ -56,6 +54,13 @@
 
         function resetErrors() {
           vm.addLabErrors = { labName: '', labNumber: {} };
+        }
+
+        function getInitialStateForNewLab() {
+          return {
+            name: '',
+            number: 1
+          };
         }
       }]);
 })();
