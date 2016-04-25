@@ -21,7 +21,7 @@ module.exports = {
   getLabs: function(courseId) {
     return models.lab.findAll({
       where: { fk_course_id: courseId },
-      attributes: ['lab_id', 'name', 'number', 'fk_course_id'],
+      attributes: ['labId', 'name', 'number'],
       order: 'number'
     });
   }

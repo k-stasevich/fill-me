@@ -7,6 +7,8 @@
       function($scope, CourseService, LabService) {
         let vm = this;
         vm.succesfullyAdded = false;
+        vm.selectedLab = {};
+        vm.labs = [];
 
         vm.newLab = {
           name: '',
@@ -32,6 +34,7 @@
                 if (item.param === 'labName') {
                   vm.addLabErrors.labName = 'Имя лабораторной работы: обязательно для заполнения';
                 }
+
                 if (item.param === 'labNumber') {
                   if (item.msg === 'RANGE_ERROR') {
                     vm.addLabErrors.labNumber.rangeError = 'Номер лабораторной работы: введите целое значение от 1 до 10';
@@ -45,6 +48,10 @@
               vm.succesfullyAdded = false;
               $scope.$apply();
             });
+        };
+
+        vm.selectLab = function(labId) {
+          vm.selectedLab = vm.labs.find((lab) => labId === lab.labId);
         };
 
         function resetErrors() {
