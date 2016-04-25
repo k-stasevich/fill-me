@@ -6,8 +6,8 @@ module.exports = {
       student_id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
       fio: { type: Sequelize.STRING, allowNull: false },
       grout_number: { type: Sequelize.STRING },
-      min_cost: { type: Sequelize.INTEGER },
-      max_cost: { type: Sequelize.INTEGER },
+      min_cost: { type: Sequelize.INTEGER, defaultValue: 1 },
+      max_cost: { type: Sequelize.INTEGER, defaultValue: 10 },
       createdAt: { type: Sequelize.DATE },
       updatedAt: { type: Sequelize.DATE }
     });
