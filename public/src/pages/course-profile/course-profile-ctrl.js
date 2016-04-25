@@ -45,7 +45,6 @@
             $scope.$apply();
           })
           .catch((err) => {
-            console.log(err);
             if (err.status === 400) {
               err.data.errors.forEach((item) => {
                 toaster.pop('error', VALIDATION_ERRORS[item.param].header, VALIDATION_ERRORS[item.param].body);

@@ -18,6 +18,17 @@ module.exports = {
       })
   },
 
+  deleteLab: function(labId) {
+    return models.lab.destroy({ where: { labId: labId } })
+      .then((affected) => {
+        if (!affected) {
+          return Promise.reject({ status: 404 });
+        }
+
+        return labId;
+      });
+  },
+
   getLabs: function(courseId) {
     return models.lab.findAll({
       where: { fk_course_id: courseId },

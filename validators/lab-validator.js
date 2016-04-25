@@ -22,5 +22,11 @@ module.exports = {
           }
         });
     }
+  },
+
+  validateForDelete: function(req) {
+    req.checkParams('labId', ERRORS.VALIDATION_ERROR).isInt();
+
+    return req.validationErrors();
   }
 };

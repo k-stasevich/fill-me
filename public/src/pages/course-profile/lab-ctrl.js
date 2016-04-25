@@ -43,6 +43,20 @@
             });
         };
 
+        vm.deleteLab = function() {
+          return LabService.deleteLab(vm.selectedLab.labId)
+            .then((updatedLabList) => {
+              vm.labs = updatedLabList;
+              vm.selectedLab = {};
+              toaster.pop('success', 'Лабораторная работа успешно удалена!');
+              $scope.$apply();
+            })
+            .catch((err) => {
+              toaster.pop('error', 'Произошла какая-то ошибка', 'попробуйте повторить операцию позже');
+              $scope.$apply();
+            });
+        };
+
         vm.selectLab = function(labId) {
           vm.selectedLab = vm.labs.find((lab) => labId === lab.labId);
         };
