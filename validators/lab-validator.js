@@ -7,7 +7,7 @@ module.exports = {
   validateForCreate: function(req) {
     req.checkBody('courseId', ERRORS.VALIDATION_ERROR).isInt();
     req.checkBody('labName', ERRORS.REQUIRED).isLength({ min: 1 });
-    req.checkBody('labNumber', ERRORS.RANGE_ERROR).isInt({ min: 1, max: 10 });
+    req.checkBody('labNumber', ERRORS.RANGE_ERROR).isInt({ min: 1, max: 20 });
 
     if (req.validationErrors()) {
       return Promise.reject(req.validationErrors());
