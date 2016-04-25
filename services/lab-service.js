@@ -18,6 +18,18 @@ module.exports = {
       })
   },
 
+  updateLab: function(labId, updates) {
+    return models.lab.update(updates, { where: { labId: labId } })
+      .then((updatedLab) => {
+        return {
+          labId: updatedLab.labId,
+          name: updatedLab.name,
+          number: updatedLab.number
+        };
+      })
+      .catch((err) => Promise.reject(err));
+  },
+
   deleteLab: function(labId) {
     return models.lab.destroy({ where: { labId: labId } })
       .then((affected) => {

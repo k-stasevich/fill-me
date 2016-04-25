@@ -23,24 +23,7 @@
               toaster.pop('success', 'Лабораторная работа успешно добавлена!');
               $scope.$apply();
             })
-            .catch((errors) => {
-              errors.data.errors.forEach((item) => {
-                if (item.param === 'labName') {
-                  toaster.pop('error', 'Имя лабораторной работы', 'обязательно для заполнения');
-                }
-
-                if (item.param === 'labNumber') {
-                  if (item.msg === 'RANGE_ERROR') {
-                    toaster.pop('error', 'Номер лабораторной работы', 'введите целое значение от 1 до 10');
-                  }
-
-                  if (item.msg === 'UNIQUE_ERROR') {
-                    toaster.pop('error', 'Номер лабораторной работы', 'лабораторная работа с таким номером уже существует');
-                  }
-                }
-              });
-              $scope.$apply();
-            });
+            .catch(handleAddOrEditErrors);
         };
 
         vm.deleteLab = function() {
@@ -57,8 +40,19 @@
             });
         };
 
+        vm.updateLab = function() {
+          return LabService.updateLab(CourseService.getAuthorizedCourse().courseId, vm.selectedLab)
+            .then((updatedLabList) => {
+              vm.labs = updatedLabList;
+              vm.selectLab(vm.selectedLab.labId);
+              toaster.pop('success', 'Лабораторная работа успешно обновлена!');
+              $scope.$apply();
+            })
+            .catch(handleAddOrEditErrors);
+        };
+
         vm.selectLab = function(labId) {
-          vm.selectedLab = vm.labs.find((lab) => labId === lab.labId);
+          vm.selectedLab = Object.assign({}, vm.labs.find((lab) => labId === lab.labId));
         };
 
         function getInitialStateForNewLab() {
@@ -66,6 +60,25 @@
             name: '',
             number: 1
           };
+        }
+
+        function handleAddOrEditErrors(errors) {
+          errors.data.errors.forEach((item) => {
+            if (item.param === 'name') {
+              toaster.pop('error', 'Имя лабораторной работы', 'обязательно для заполнения');
+            }
+
+            if (item.param === 'number') {
+              if (item.msg === 'RANGE_ERROR') {
+                toaster.pop('error', 'Номер лабораторной работы', 'введите целое значение от 1 до 10');
+              }
+
+              if (item.msg === 'UNIQUE_ERROR') {
+                toaster.pop('error', 'Номер лабораторной работы', 'лабораторная работа с таким номером уже существует');
+              }
+            }
+          });
+          $scope.$apply();
         }
       }]);
 })();

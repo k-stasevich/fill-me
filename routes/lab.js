@@ -8,7 +8,8 @@ const ERRORS = require('../constants/error-constants');
 module.exports = function(app) {
   app.route('/api/sec/lab')
     .post(addLab)
-    .get(getLabs);
+    .get(getLabs)
+    .put(updateLab);
 
   app.route('/api/sec/lab/:labId')
     .delete(deleteLab);
@@ -17,8 +18,8 @@ module.exports = function(app) {
 function addLab(req, res) {
   return labValidator.validateForCreate(req)
     .then(() => labService.addLab(req.body.courseId, {
-      name: req.body.labName,
-      number: req.body.labNumber
+      name: req.body.name,
+      number: req.body.number
     }))
     .then((newLab) => res.json(newLab))
     .catch((errors) => res.status(400).json({ errors: errors }));
@@ -27,6 +28,16 @@ function addLab(req, res) {
 function getLabs(req, res) {
   return labService.getLabs(req.query.courseId)
     .then((labs) => res.json(labs));
+}
+
+function updateLab(req, res) {
+  return labValidator.validateForUpdate(req)
+    .then(() => labService.updateLab(req.body.labId, {
+      name: req.body.name,
+      number: req.body.number
+    }))
+    .then((updatedLab) => res.json(updatedLab))
+    .catch((err) => res.status(400).json({ errors: err }));
 }
 
 function deleteLab(req, res) {

@@ -17,12 +17,27 @@
       this.addLab = function(courseId, lab) {
         return ApiService.request('/api/sec/lab', 'POST', {
             courseId: courseId,
-            labName: lab.name,
-            labNumber: lab.number
+            name: lab.name,
+            number: lab.number
           })
           .then((addedLab) => {
             labs.push(addedLab);
             return addedLab;
+          })
+          .catch((err) => Promise.reject(err));
+      };
+
+      this.updateLab = function(courseId, lab) {
+        return ApiService.request('/api/sec/lab', 'PUT', {
+            courseId: courseId,
+            labId: lab.labId,
+            name: lab.name,
+            number: lab.number
+          })
+          .then(() => {
+            const selectedLabIndex = labs.findIndex((item) => item.labId === lab.labId);
+            labs[selectedLabIndex] = lab;
+            return labs;
           })
           .catch((err) => Promise.reject(err));
       };
