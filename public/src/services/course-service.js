@@ -20,7 +20,7 @@
             password: password
           })
           .then((response) => {
-            authorizedCourse = courses.find((item) => item.courseId = courseId);
+            authorizedCourse = courses.find((item) => item.courseId === courseId);
             return response;
           })
           .catch((err) => Promise.reject(err));
