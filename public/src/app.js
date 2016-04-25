@@ -3,6 +3,8 @@
 
   const app = angular.module('app', [
     'ngRoute',
+    'ngAnimate',
+    'toaster',
     'ui.bootstrap'
   ]);
 

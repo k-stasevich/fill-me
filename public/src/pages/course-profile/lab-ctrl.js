@@ -3,15 +3,12 @@
 
   angular
     .module('app')
-    .controller('LabCtrl', ['$scope', 'CourseService', 'LabService',
-      function($scope, CourseService, LabService) {
+    .controller('LabCtrl', ['$scope', 'toaster', 'CourseService', 'LabService',
+      function($scope, toaster, CourseService, LabService) {
         let vm = this;
-        vm.succesfullyAdded = false;
         vm.selectedLab = {};
         vm.labs = [];
-
         vm.newLab = getInitialStateForNewLab();
-        resetErrors();
 
         LabService.loadLabs(CourseService.getAuthorizedCourse().courseId)
           .then((labs) => {
@@ -19,31 +16,29 @@
           });
 
         vm.addLab = function() {
-          resetErrors();
           return LabService.addLab(CourseService.getAuthorizedCourse().courseId, vm.newLab)
             .then(() => {
               vm.labs = LabService.getLabs();
-              vm.succesfullyAdded = true;
               vm.newLab = getInitialStateForNewLab();
+              toaster.pop('success', 'Лабораторная работа успешно добавлена!');
               $scope.$apply();
             })
             .catch((errors) => {
               errors.data.errors.forEach((item) => {
                 if (item.param === 'labName') {
-                  vm.addLabErrors.labName = 'Имя лабораторной работы: обязательно для заполнения';
+                  toaster.pop('error', 'Имя лабораторной работы', 'обязательно для заполнения');
                 }
 
                 if (item.param === 'labNumber') {
                   if (item.msg === 'RANGE_ERROR') {
-                    vm.addLabErrors.labNumber.rangeError = 'Номер лабораторной работы: введите целое значение от 1 до 10';
+                    toaster.pop('error', 'Номер лабораторной работы', 'введите целое значение от 1 до 10');
                   }
 
                   if (item.msg === 'UNIQUE_ERROR') {
-                    vm.addLabErrors.labNumber.uniqueError = 'Номер лабораторной работы: лабораторная работа с таким номером уже существует';
+                    toaster.pop('error', 'Номер лабораторной работы', 'лабораторная работа с таким номером уже существует');
                   }
                 }
               });
-              vm.succesfullyAdded = false;
               $scope.$apply();
             });
         };
@@ -51,10 +46,6 @@
         vm.selectLab = function(labId) {
           vm.selectedLab = vm.labs.find((lab) => labId === lab.labId);
         };
-
-        function resetErrors() {
-          vm.addLabErrors = { labName: '', labNumber: {} };
-        }
 
         function getInitialStateForNewLab() {
           return {

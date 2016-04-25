@@ -32,20 +32,6 @@
               </form>
             </div>
           </div>
-          <div class="row">
-            <div class="col-sm-8 col-sm-offset-2">
-              <div class="alert alert-success" ng-show="courseProfile.succesfullyChanged">Конфигурации успешно изменены!</div>
-              <div class="alert alert-danger" ng-show="courseProfile.errors.percentForSuccess ||
-              courseProfile.errors.maxNumberOfAttemps ||
-              courseProfile.errors.timeForExecuting ||
-              courseProfile.errors.numberOfQuestions">
-                <div ng-show="courseProfile.errors.percentForSuccess">Процент успеха: введите значение от 20 до 100</div>
-                <div ng-show="courseProfile.errors.maxNumberOfAttemps">Время выполнения: введите значение от 5 до 120</div>
-                <div ng-show="courseProfile.errors.timeForExecuting">Колличество попыток в день: введите значение от 1 до 10</div>
-                <div ng-show="courseProfile.errors.numberOfQuestions">Колличество вопросов в тесте: введите значение от 1 до 30</div>
-              </div>
-            </div>
-          </div>
         </uib-tab>
 
         <!-- Questions tab -->
@@ -71,13 +57,23 @@
                   <button type="button" class="btn btn-primary" ng-click="lab.addLab()">Добавить лабораторную работу</button>
                 </form>
               </div>
-              <div class="row">
-                <div class="alert alert-success" ng-show="lab.succesfullyAdded">Лабораторная работа успешно добавлена!</div>
-                <div class="alert alert-danger" ng-show="lab.addLabErrors.labName || lab.addLabErrors.labNumber.rangeError || lab.addLabErrors.labNumber.uniqueError">
-                  <div ng-show="lab.addLabErrors.labName">Имя лабораторной работы: обязательно для заполнения</div>
-                  <div ng-show="lab.addLabErrors.labNumber.rangeError">Номер лабораторной работы: введите целое число от 1 до 20</div>
-                  <div ng-show="lab.addLabErrors.labNumber.uniqueError">Лабораторная работа с таким номером уже существует</div>
-                </div>
+
+              <!-- edit theme/lab -->
+              <div class="row" ng-show="lab.selectedLab.labId">
+                <form>
+                  <div class="form-group">
+                    <label>Номер</label>
+                    <input type="number" ng-model="lab.selectedLab.number" class="form-control">
+                  </div>
+
+                  <div class="form-group">
+                    <label>Имя темы/лабораторной работы</label>
+                    <input type="text" ng-model="lab.selectedLab.name" class="form-control">
+                  </div>
+
+                  <button type="button" class="btn btn-primary" ng-click="lab.editLab()">Сохранить</button>
+                  <button type="button" class="btn btn-primary" ng-click="lab.deleteLab()">Удалить</button>
+                </form>
               </div>
             </div>
             <div class="col-sm-6 col-xs-6">

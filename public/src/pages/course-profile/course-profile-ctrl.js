@@ -3,7 +3,14 @@
 
   angular
     .module('app')
-    .controller('CourseProfileCtrl', ['$scope', 'CourseService', function($scope, CourseService) {
+    .controller('CourseProfileCtrl', ['$scope', 'toaster', 'CourseService', function($scope, toaster, CourseService) {
+      const VALIDATION_ERRORS = {
+        percentForSuccess: { header: 'Процент успеха', body: 'введите значение от 20 до 100' },
+        maxNumberOfAttemps: { header: 'Время выполнения', body: 'введите значение от 5 до 120' },
+        timeForExecuting: { header: 'Колличество попыток в день', body: 'введите значение от 1 до 10' },
+        numberOfQuestions: { header: 'Колличество вопросов в тесте', body: 'введите значение от 1 до 30' }
+      };
+
       let vm = this;
 
       vm.settings = {
@@ -25,9 +32,6 @@
         }
       };
 
-      vm.errors = {};
-      vm.succesfullyChanged = false;
-
       vm.updateCourse = function() {
         return CourseService.updateCourse({
             percentForSuccess: vm.settings.percentForSuccess.current,
@@ -36,19 +40,18 @@
             numberOfQuestions: vm.settings.numberOfQuestions.current
           })
           .then((updatedCourse) => {
-            vm.errors = {};
-            vm.succesfullyChanged = true;
+            toaster.pop('success', 'Настройки успешно обновлены!');
             changeRealValues();
             $scope.$apply();
           })
           .catch((err) => {
-            vm.succesfullyChanged = false;
+            console.log(err);
             if (err.status === 400) {
               err.data.errors.forEach((item) => {
-                vm.errors[item.param] = item.msg;
-                $scope.$apply();
+                toaster.pop('error', VALIDATION_ERRORS[item.param].header, VALIDATION_ERRORS[item.param].body);
               });
             }
+            $scope.$apply();
           });
       };
 
@@ -56,11 +59,9 @@
         for (let prop in vm.settings) {
           vm.settings[prop].current = vm.settings[prop].real;
         }
-        vm.errors = {};
-        vm.succesfullyChanged = false;
       };
 
-      vm.resetOfInputsWithApply = function () {
+      vm.resetOfInputsWithApply = function() {
         vm.resetOfInputs();
       };
 
