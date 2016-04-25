@@ -4,7 +4,6 @@ const models = require('../models');
 
 module.exports = {
   addLab: function(courseId, lab) {
-    console.log(courseId);
     return models.lab.create({
         fk_course_id: courseId,
         name: lab.name,
@@ -22,7 +21,8 @@ module.exports = {
   getLabs: function(courseId) {
     return models.lab.findAll({
       where: { fk_course_id: courseId },
-      attributes: ['lab_id', 'name', 'number', 'fk_course_id']
+      attributes: ['lab_id', 'name', 'number', 'fk_course_id'],
+      order: 'number'
     });
   }
 };
