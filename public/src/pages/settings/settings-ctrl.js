@@ -6,8 +6,8 @@
     .controller('SettingsCtrl', ['$scope', 'toaster', 'CourseService', function($scope, toaster, CourseService) {
       const VALIDATION_ERRORS = {
         percentForSuccess: { header: 'Процент успеха', body: 'введите значение от 20 до 100' },
-        maxNumberOfAttemps: { header: 'Время выполнения', body: 'введите значение от 5 до 120' },
-        timeForExecuting: { header: 'Колличество попыток в день', body: 'введите значение от 1 до 10' },
+        timeForExecuting: { header: 'Время выполнения', body: 'введите значение от 5 до 120' },
+        maxNumberOfAttemps: { header: 'Колличество попыток в день', body: 'введите значение от 1 до 10' },
         numberOfQuestions: { header: 'Колличество вопросов в тесте', body: 'введите значение от 1 до 30' },
         minCostToLadder: { header: 'Минимальная стоимость вопроса для сдачи', body: 'неверное значение' }
       };
