@@ -33,5 +33,9 @@
           })
           .catch((err) => Promise.reject(err));
       };
+
+      this.getStudents = function() {
+        return students;
+      }
     }]);
 })();

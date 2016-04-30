@@ -3,7 +3,7 @@
 
   angular
     .module('app')
-    .controller('CourseProfileCtrl', ['$scope', 'toaster', 'CourseService', function($scope, toaster, CourseService) {
+    .controller('SettingsCtrl', ['$scope', 'toaster', 'CourseService', function($scope, toaster, CourseService) {
       const VALIDATION_ERRORS = {
         percentForSuccess: { header: 'Процент успеха', body: 'введите значение от 20 до 100' },
         maxNumberOfAttemps: { header: 'Время выполнения', body: 'введите значение от 5 до 120' },

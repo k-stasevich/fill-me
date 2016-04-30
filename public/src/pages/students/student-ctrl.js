@@ -10,13 +10,8 @@
           fio: { header: 'ФИО', body: 'поле обязательно' }
         };
         let vm = this;
-        vm.students = [];
+        vm.students = StudentService.getStudents();
         vm.newStudent = getInitialStateForNewStudent();
-
-        StudentService.loadStudents()
-          .then((students) => {
-            vm.students = students;
-          });
 
         vm.addStudent = function() {
           return StudentService.addStudent(vm.newStudent)

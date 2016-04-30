@@ -12,6 +12,10 @@
             log = logFromResponse;
             return log;
           });
-      }
+      };
+
+      this.getLog = function() {
+        return log;
+      };
     }]);
 })();

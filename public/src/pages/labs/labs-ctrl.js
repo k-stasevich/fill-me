@@ -7,13 +7,9 @@
       function($scope, toaster, CourseService, LabService) {
         let vm = this;
         vm.selectedLab = {};
-        vm.labs = [];
+        vm.labs = LabService.getLabs();
         vm.newLab = getInitialStateForNewLab();
 
-        LabService.loadLabs(CourseService.getAuthorizedCourse().courseId)
-          .then((labs) => {
-            vm.labs = labs;
-          });
 
         vm.addLab = function() {
           return LabService.addLab(CourseService.getAuthorizedCourse().courseId, vm.newLab)

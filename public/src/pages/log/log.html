@@ -1,0 +1,27 @@
+<div class="row">
+  <table class="table">
+    <thead>
+    <tr>
+      <td>ФИО</td>
+      <td>Номер группы</td>
+      <td>Лаб. раб.</td>
+      <td>Время начала</td>
+      <td>Время конца</td>
+      <td>Результат</td>
+      <td>pc ip</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="item in log.log">
+      <td>{{item.student.fio}}</td>
+      <td>{{item.student.groupNumber}}</td>
+      <td>{{item.lab.name}}</td>
+      <td>{{item.timeBegin}}</td>
+      <td>{{item.timeFinish}}</td>
+      <td>{{item.result}}</td>
+      <td>{{item.pcip}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+

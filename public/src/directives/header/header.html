@@ -1,5 +1,14 @@
-<div class="row header">
-  <div class="col-md-4" ng-show="header.authenticatedCourse.courseType">
-    <span class="authenticatedCourse">Выбранный курс: {{header.authenticatedCourse.courseType}}</span>
+<nav class="navbar navbar-inverse header">
+  <div class="container-fluid" ng-show="header.authenticatedCourse.courseType">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#/settings">{{header.authenticatedCourse.courseType}}</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li ng-class="getClass('/settings')"><a href="#/settings">Настройки</a></li>
+      <li ng-class="getClass('/questions')"><a href="#/questions">Вопросы</a></li>
+      <li ng-class="getClass('/labs')"><a href="#/labs">Темы</a></li>
+      <li ng-class="getClass('/students')"><a href="#/students">Студенты</a></li>
+      <li ng-class="getClass('/log')"><a href="#/log">Лог</a></li>
+    </ul>
   </div>
-</div>
+</nav>

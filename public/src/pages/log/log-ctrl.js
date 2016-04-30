@@ -7,10 +7,6 @@
       function($scope, LogService) {
         let vm = this;
 
-        LogService.loadLog()
-          .then((log) => {
-            vm.log = log;
-          });
-
+        vm.log = LogService.getLog();
       }]);
 })();

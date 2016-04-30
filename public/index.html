@@ -19,10 +19,12 @@
 
   <!-- CONTROLLERS -->
   <script type="text/javascript" src="build/js/pages/home/home-ctrl.js"></script>
-  <script type="text/javascript" src="build/js/pages/course-profile/course-profile-ctrl.js"></script>
-  <script type="text/javascript" src="build/js/pages/course-profile/lab-ctrl.js"></script>
-  <script type="text/javascript" src="build/js/pages/course-profile/student-ctrl.js"></script>
-  <script type="text/javascript" src="build/js/pages/course-profile/log-ctrl.js"></script>
+  <script type="text/javascript" src="build/js/pages/labs/labs-ctrl.js"></script>
+  <script type="text/javascript" src="build/js/pages/log/log-ctrl.js"></script>
+  <script type="text/javascript" src="build/js/pages/questions/question-ctrl.js"></script>
+  <script type="text/javascript" src="build/js/pages/questions/add-question/add-question-ctrl.js"></script>
+  <script type="text/javascript" src="build/js/pages/settings/settings-ctrl.js"></script>
+  <script type="text/javascript" src="build/js/pages/students/student-ctrl.js"></script>
 
   <!-- SERVICES -->
   <script type="text/javascript" src="build/js/services/course-service.js"></script>
@@ -30,6 +32,7 @@
   <script type="text/javascript" src="build/js/services/api-service.js"></script>
   <script type="text/javascript" src="build/js/services/student-service.js"></script>
   <script type="text/javascript" src="build/js/services/log-service.js"></script>
+  <script type="text/javascript" src="build/js/services/question-service.js"></script>
 
   <!-- DIRECTIVES -->
   <script type="text/javascript" src="build/js/directives/header/header-dir.js"></script>
@@ -38,9 +41,10 @@
   <script type="text/javascript" src="build/js/constants/route-constants.js"></script>
 </head>
 <body>
-<div class="container-fluid">
-  <header></header>
 
+<header></header>
+
+<div class="container">
   <ng-view></ng-view>
 
   <toaster-container toaster-options="{'time-out': 5000}"></toaster-container>

@@ -13,7 +13,7 @@
       this.auth = function() {
         CourseService.auth(+this.selectedCourse, this.password)
           .then(() => {
-            $location.path('/course-profile');
+            $location.path('/settings');
             $scope.$apply();
           })
           .catch(() => {
