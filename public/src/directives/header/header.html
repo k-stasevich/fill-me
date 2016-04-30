@@ -4,11 +4,15 @@
       <a class="navbar-brand" href="#/settings">{{header.authenticatedCourse.courseType}}</a>
     </div>
     <ul class="nav navbar-nav">
-      <li ng-class="getClass('/settings')"><a href="#/settings">Настройки</a></li>
-      <li ng-class="getClass('/questions')"><a href="#/questions">Вопросы</a></li>
-      <li ng-class="getClass('/labs')"><a href="#/labs">Темы</a></li>
-      <li ng-class="getClass('/students')"><a href="#/students">Студенты</a></li>
-      <li ng-class="getClass('/log')"><a href="#/log">Лог</a></li>
+      <li ng-class="header.getClass('/settings')"><a href="#/settings">Настройки</a></li>
+      <li ng-class="header.getClass('/questions')"><a href="#/questions">Вопросы</a></li>
+      <li ng-class="header.getClass('/labs')"><a href="#/labs">Темы</a></li>
+      <li ng-class="header.getClass('/students')"><a href="#/students">Студенты</a></li>
+      <li ng-class="header.getClass('/log')"><a href="#/log">Лог</a></li>
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right">
+    <li><a href="javascript:void(0)" ng-click="header.logOut()"><span class="glyphicon glyphicon-user"></span> Выйти</a></li>
     </ul>
   </div>
 </nav>

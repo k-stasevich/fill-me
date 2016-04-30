@@ -45,7 +45,11 @@
               return response;
             })
             .catch((err) => Promise.reject(err))
-        }
+        };
+
+        this.logOut = function() {
+          token = '';
+        };
       }]);
 
 })();

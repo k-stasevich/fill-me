@@ -11,16 +11,22 @@
         link: function(scope, element, attrs, ctrl) {
 
         },
-        controller: ['$scope', '$location', function($scope, $location) {
+        controller: ['$scope', '$location', 'ApiService', function($scope, $location, ApiService) {
           let vm = this;
 
           $scope.$on('auth', function(event, data) {
             vm.authenticatedCourse = data;
           });
 
-          $scope.getClass = function(path) {
+          vm.getClass = function(path) {
             return ($location.path().substr(0, path.length) === path) ? 'active' : '';
-          }
+          };
+
+          vm.logOut = function() {
+            ApiService.logOut();
+            vm.authenticatedCourse = {};
+            $location.path('/');
+          };
         }],
         controllerAs: 'header'
       }

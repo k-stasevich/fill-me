@@ -75,5 +75,8 @@
           }]
         }
       })
+      .otherwise({
+        redirectTo: '/'
+      })
   }])
 })();
