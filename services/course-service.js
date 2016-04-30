@@ -6,7 +6,8 @@ const webTokenService = require('./web-token-service');
 module.exports = {
   getCourses: function() {
     return models.course.findAll({
-      attributes: ['courseId', 'courseType', 'percentForSuccess', 'timeForExecuting', 'maxNumberOfAttemps', 'numberOfQuestions']
+      attributes: ['courseId', 'courseType', 'courseTypeTransl', 'percentForSuccess', 'timeForExecuting', 'maxNumberOfAttemps', 'numberOfQuestions',
+        'minCostToLadder', 'permitToUseMinRule', 'permitToCleverCount']
     });
   },
 
@@ -15,23 +16,18 @@ module.exports = {
         percentForSuccess: updates.percentForSuccess,
         timeForExecuting: updates.timeForExecuting,
         maxNumberOfAttemps: updates.maxNumberOfAttemps,
-        numberOfQuestions: updates.numberOfQuestions
+        numberOfQuestions: updates.numberOfQuestions,
+        minCostToLadder: updates.minCostToLadder,
+        permitToUseMinRule: updates.permitToUseMinRule,
+        permitToCleverCount: updates.permitToCleverCount
       }, {
         where: { courseId: courseId }
       })
-      .then(() => {
-        return models.course.find({ where: { courseId: courseId } })
-      })
-      .then((updatedCourse) => {
-        return {
-          courseId: updatedCourse.courseId,
-          courseType: updatedCourse.courseType,
-          percentForSuccess: updatedCourse.percentForSuccess,
-          timeForExecuting: updatedCourse.timeForExecuting,
-          numberOfAttemps: updatedCourse.maxNumberOfAttemps,
-          numberOfQuestions: updatedCourse.numberOfQuestions
-        }
-      })
+      .then(() => models.course.find({
+        where: { courseId: courseId },
+        attributes: ['courseId', 'courseType', 'courseTypeTransl', 'percentForSuccess', 'timeForExecuting', 'maxNumberOfAttemps', 'numberOfQuestions',
+          'minCostToLadder', 'permitToUseMinRule', 'permitToCleverCount']
+      }))
       .catch((err) => Promise.reject(err));
   },
 

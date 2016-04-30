@@ -32,7 +32,10 @@
             percentForSuccess: updates.percentForSuccess,
             timeForExecuting: updates.timeForExecuting,
             maxNumberOfAttemps: updates.maxNumberOfAttemps,
-            numberOfQuestions: updates.numberOfQuestions
+            numberOfQuestions: updates.numberOfQuestions,
+            minCostToLadder: updates.minCostToLadder,
+            permitToUseMinRule: updates.permitToUseMinRule,
+            permitToCleverCount: updates.permitToCleverCount
           })
           .then((response) => {
             authorizedCourse = response.data;

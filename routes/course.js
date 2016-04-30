@@ -32,7 +32,10 @@ function editCourse(req, res) {
       numberOfQuestions: req.body.numberOfQuestions,
       percentForSuccess: req.body.percentForSuccess,
       timeForExecuting: req.body.timeForExecuting,
-      maxNumberOfAttemps: req.body.maxNumberOfAttemps
+      maxNumberOfAttemps: req.body.maxNumberOfAttemps,
+      minCostToLadder: req.body.minCostToLadder,
+      permitToUseMinRule: req.body.permitToUseMinRule,
+      permitToCleverCount: req.body.permitToCleverCount
     }, req.body.courseId)
     .then((updatedCourse) => res.json({ success: true, data: updatedCourse }))
     .catch((err) => res.status(400).json({ message: ERRORS.BAD_REQUEST }));
