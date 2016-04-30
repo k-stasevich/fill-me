@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
     freezeTableName: true,
     classMethods: {
       associate: function(model) {
-        lab.belongsTo(model.course, { foreignKey: 'fk_course_id'});
+        lab.belongsTo(model.course, { foreignKey: 'fk_course_id' });
       }
     }
   });
