@@ -11,6 +11,6 @@ module.exports = {
   },
 
   down: function(queryInterface, Sequelize) {
-    queryInterface.dropTable('question_type');
+    return queryInterface.dropTable('question_type');
   }
 };
