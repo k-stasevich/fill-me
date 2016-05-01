@@ -1,45 +1,47 @@
-<div class="row">
-  <div class="col-sm-4 col-sm-offset-4">
-    <form>
-      <div class="form-group">
-        <label>Процент сдачи</label>
-        <input type="number" ng-model="settings.settings.percentForSuccess.current" class="form-control">
-      </div>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6 col-xs-6">
+      <form>
+        <div class="form-group">
+          <label>Процент сдачи</label>
+          <input type="number" ng-model="settings.settings.percentForSuccess.current" class="form-control">
+        </div>
 
-      <div class="form-group">
-        <label>Время выполнения (мин)</label>
-        <input type="number" ng-model="settings.settings.timeForExecuting.current" class="form-control">
-      </div>
+        <div class="form-group">
+          <label>Время выполнения (мин)</label>
+          <input type="number" ng-model="settings.settings.timeForExecuting.current" class="form-control">
+        </div>
 
-      <div class="form-group">
-        <label>Колличество попыток в день</label>
-        <input type="number" ng-model="settings.settings.maxNumberOfAttemps.current" class="form-control">
-      </div>
+        <div class="form-group">
+          <label>Колличество попыток в день</label>
+          <input type="number" ng-model="settings.settings.maxNumberOfAttemps.current" class="form-control">
+        </div>
 
-      <div class="form-group">
-        <label>Колличество вопросов в тесте</label>
-        <input type="number" ng-model="settings.settings.numberOfQuestions.current" class="form-control">
-      </div>
+        <div class="form-group">
+          <label>Колличество вопросов в тесте</label>
+          <input type="number" ng-model="settings.settings.numberOfQuestions.current" class="form-control">
+        </div>
 
-      <div class="form-group">
-        <label>Минимальная стоимость вопроса для сдачи</label>
-        <input type="number" ng-model="settings.settings.minCostToLadder.current" class="form-control">
-      </div>
+        <div class="form-group">
+          <label>Минимальная стоимость вопроса для сдачи</label>
+          <input type="number" ng-model="settings.settings.minCostToLadder.current" class="form-control">
+        </div>
 
-      <div class="form-group">
-        <div><label>Включить функцию "Минимальная стоимость вопроса для сдачи"</label></div>
-        <label class="radio-inline"><input type="radio" ng-model="settings.settings.permitToUseMinRule.current" ng-value="1">Да</label>
-        <label class="radio-inline"><input type="radio" ng-model="settings.settings.permitToUseMinRule.current" ng-value="0">Нет</label>
-      </div>
+        <div class="form-group">
+          <div><label>Включить функцию "Минимальная стоимость вопроса для сдачи"</label></div>
+          <label class="radio-inline"><input type="radio" ng-model="settings.settings.permitToUseMinRule.current" ng-value="1">Да</label>
+          <label class="radio-inline"><input type="radio" ng-model="settings.settings.permitToUseMinRule.current" ng-value="0">Нет</label>
+        </div>
 
-      <div class="form-group">
-        <div><label>Включить функцию "Умный подсчет"</label></div>
-        <label class="radio-inline"><input type="radio" ng-model="settings.settings.permitToCleverCount.current" ng-value="1">Да</label>
-        <label class="radio-inline"><input type="radio" ng-model="settings.settings.permitToCleverCount.current" ng-value="0">Нет</label>
-      </div>
+        <div class="form-group">
+          <div><label>Включить функцию "Умный подсчет"</label></div>
+          <label class="radio-inline"><input type="radio" ng-model="settings.settings.permitToCleverCount.current" ng-value="1">Да</label>
+          <label class="radio-inline"><input type="radio" ng-model="settings.settings.permitToCleverCount.current" ng-value="0">Нет</label>
+        </div>
 
-      <button type="button" class="btn btn-primary" ng-click="settings.updateCourse()">Сохранить</button>
-      <button type="button" class="btn btn-primary" ng-click="settings.resetOfInputsWithApply()">Cброс</button>
-    </form>
+        <button type="button" class="btn btn-primary" ng-click="settings.updateCourse()">Сохранить</button>
+        <button type="button" class="btn btn-primary" ng-click="settings.resetOfInputsWithApply()">Cброс</button>
+      </form>
+    </div>
   </div>
 </div>

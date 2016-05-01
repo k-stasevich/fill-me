@@ -15,6 +15,10 @@
       }
     }];
 
+    const loadLabs = ['LabService', 'CourseService', function(LabService, CourseService) {
+      return LabService.loadLabs(CourseService.getAuthorizedCourse().courseId);
+    }];
+
     $routeProvider
       .when('/', {
         templateUrl: 'build/js/pages/home/home.html',
@@ -40,7 +44,16 @@
         templateUrl: 'build/js/pages/questions/question.html',
         controller: 'QuestionCtrl',
         controllerAs: 'question',
-        resolve: isAuthenticated
+        resolve: { isAuthenticated: isAuthenticated }
+      })
+      .when('/questions/add-question', {
+        templateUrl: 'build/js/pages/questions/add-question/add-question.html',
+        controller: 'AddQuestionCtrl',
+        controllerAs: 'addQuestion',
+        resolve: {
+          isAuthenticated: isAuthenticated,
+          loadLabs: loadLabs
+        }
       })
       .when('/labs', {
         templateUrl: 'build/js/pages/labs/labs.html',
@@ -48,9 +61,7 @@
         controllerAs: 'lab',
         resolve: {
           isAuthenticated: isAuthenticated,
-          loadLabs: ['LabService', 'CourseService', function(LabService, CourseService) {
-            return LabService.loadLabs(CourseService.getAuthorizedCourse().courseId);
-          }]
+          loadLabs: loadLabs
         }
       })
       .when('/students', {

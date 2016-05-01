@@ -6,12 +6,16 @@
     .service('LabService', ['ApiService', function(ApiService) {
       let labs = [];
 
-      this.loadLabs = function(courseId) {
-        return ApiService.request('/api/sec/lab?courseId=' + courseId, 'GET')
-          .then((allLabs) => {
-            labs = allLabs;
-            return allLabs;
-          });
+      this.loadLabs = function(courseId, force = false) {
+        if (!labs.length || !force) {
+          return ApiService.request('/api/sec/lab?courseId=' + courseId, 'GET')
+            .then((allLabs) => {
+              labs = allLabs;
+              return allLabs;
+            });
+        } else {
+          return Promise.resolve(labs);
+        }
       };
 
       this.addLab = function(courseId, lab) {
