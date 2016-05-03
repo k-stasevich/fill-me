@@ -2,7 +2,7 @@
 
 module.exports = function(sequelize, DataTypes) {
   const question = sequelize.define('question', {
-    question_id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, field: 'QUESTION_ID' },
+    questionId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, field: 'QUESTION_ID' },
     cost: { type: DataTypes.INTEGER, allowNull: false, field: 'COST' },
     adviser: { type: DataTypes.STRING, field: 'ADVISER' },
     answer1: { type: DataTypes.STRING, field: 'ANSWER1' },
@@ -13,11 +13,11 @@ module.exports = function(sequelize, DataTypes) {
     answer: { type: DataTypes.STRING, field: 'ANSWER' }
   }, {
     freezeTableName: true,
-    tableName: 'QUESTION_TYPE',
+    tableName: 'QUESTION',
     classMethods: {
       associate: function(model) {
         question.belongsTo(model.questionType, { foreignKey: 'fk_question_type_id' });
-        question.belongsTo(model.course, { foreignKey: 'fk_course_id' });
+        question.belongsTo(model.course, { foreignKey: 'fk_course_id'});
         question.belongsTo(model.lab, { foreignKey: 'fk_lab_id' });
       }
     }

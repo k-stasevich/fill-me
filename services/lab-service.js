@@ -41,11 +41,24 @@ module.exports = {
       });
   },
 
-  getLabs: function(courseId) {
-    return models.lab.findAll({
+  getLabs: function(courseId, withQuestions) {
+    if (withQuestions === 'undefined') {
+      withQuestions = false;
+    }
+
+    const options = {
       where: { fk_course_id: courseId },
       attributes: ['labId', 'name', 'number'],
       order: 'number'
-    });
+    };
+
+    if (withQuestions) {
+      options.include = {
+        model: models.question,
+        attributes: ['questionId', 'cost', 'adviser', 'answer', 'fk_question_type_id', 'fk_course_id', 'fk_lab_id']
+      }
+    }
+
+    return models.lab.findAll(options);
   }
 };

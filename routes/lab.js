@@ -26,7 +26,9 @@ function addLab(req, res) {
 }
 
 function getLabs(req, res) {
-  return labService.getLabs(req.query.courseId)
+  const includeQuestions = req.query.includeQuestions === 'true';
+
+  return labService.getLabs(req.query.courseId, includeQuestions)
     .then((labs) => res.json(labs));
 }
 

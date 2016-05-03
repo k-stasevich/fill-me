@@ -10,6 +10,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(model) {
         lab.belongsTo(model.course, { foreignKey: 'fk_course_id' });
+        lab.hasMany(model.question, { foreignKey: 'fk_lab_id' });
       }
     }
   });
