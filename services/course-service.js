@@ -40,5 +40,13 @@ module.exports = {
 
         return webTokenService.sign({ courseId: courseId, password: password });
       });
+  },
+
+  read: function(courseId) {
+    return models.course.find({
+      where: { courseId: courseId },
+      attributes: ['courseId', 'courseType', 'courseTypeTransl', 'percentForSuccess', 'timeForExecuting', 'maxNumberOfAttemps', 'numberOfQuestions',
+        'minCostToLadder', 'permitToUseMinRule', 'permitToCleverCount']
+    });
   }
 };

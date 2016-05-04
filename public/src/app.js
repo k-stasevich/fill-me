@@ -44,7 +44,15 @@
         templateUrl: 'build/js/pages/questions/question.html',
         controller: 'QuestionCtrl',
         controllerAs: 'question',
-        resolve: { isAuthenticated: isAuthenticated }
+        resolve: {
+          isAuthenticated: isAuthenticated,
+          loadQuestions: ['QuestionService', 'CourseService', function(QuestionService, CourseService) {
+            return QuestionService.loadQuestions(CourseService.getAuthorizedCourse().courseId);
+          }],
+          loadLabs: ['LabService', 'CourseService', function(LabService, CourseService) {
+            return LabService.loadLabs(CourseService.getAuthorizedCourse().courseId, false, true);
+          }]
+        }
       })
       .when('/questions/add-question', {
         templateUrl: 'build/js/pages/questions/add-question/add-question.html',

@@ -1,7 +1,20 @@
-<div class="container">
-  <div class="row">
-    <div class="container-fluid themes-tab">
-      <a href="#/questions/add-question" class="btn btn-primary" role="button">Создать вопрос</a>
+<div class="container-fluid themes-tab">
+  <div class="col-sm-12 col-xs-12">
+    <div class="row">
+      <p><a href="#/questions/add-question" class="btn btn-primary" role="button">Создать вопрос</a>
+    </div>
+    <div class="row">
+      <ng-include src="'../questions/azaza.html'"></ng-include>
+      <uib-accordion close-others="oneAtATime">
+        <uib-accordion-group ng-repeat="lab in question.labs" heading="{{lab.name}}">
+
+          <uib-accordion close-others="oneAtATime">
+            <uib-accordion-group ng-repeat="question in lab.questions" heading="какой-то вопрос">
+            </uib-accordion-group>
+          </uib-accordion>
+
+        </uib-accordion-group>
+      </uib-accordion>
     </div>
   </div>
 </div>

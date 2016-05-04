@@ -6,9 +6,12 @@
     .service('LabService', ['ApiService', function(ApiService) {
       let labs = [];
 
-      this.loadLabs = function(courseId, force = false) {
+      this.loadLabs = function(courseId, force = false, includeQuestions = false) {
         if (!labs.length || !force) {
-          return ApiService.request('/api/sec/lab?courseId=' + courseId, 'GET')
+          let url = '/api/sec/lab?courseId=' + courseId;
+          url = includeQuestions ? url + '&includeQuestions=true' : url;
+
+          return ApiService.request(url, 'GET')
             .then((allLabs) => {
               labs = allLabs;
               return allLabs;

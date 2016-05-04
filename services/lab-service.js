@@ -60,5 +60,17 @@ module.exports = {
     }
 
     return models.lab.findAll(options);
+  },
+
+  read: function(labId) {
+    return models.lab.find({
+      where: { labId: labId },
+      attributes: ['labId', 'name', 'number', 'fk_course_id'],
+      include: {
+        model: models.course,
+        attributes: ['courseId', 'courseType', 'courseTypeTransl', 'percentForSuccess', 'timeForExecuting', 'maxNumberOfAttemps', 'numberOfQuestions',
+          'minCostToLadder', 'permitToUseMinRule', 'permitToCleverCount']
+      }
+    });
   }
 };
