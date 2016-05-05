@@ -37,6 +37,7 @@
               courseId: CourseService.getAuthorizedCourse().courseId,
               questionTypeId: vm.newQuestion.type.id,
               labId: vm.newQuestion.lab.labId,
+              labNumber: vm.newQuestion.lab.number,
               cost: vm.newQuestion.cost,
               condition: vm.newQuestion.condition,
               adviser: vm.newQuestion.adviser,
@@ -53,6 +54,11 @@
                   }
                 });
               }
+
+              if (err.status === 500) {
+                toaster.pop('error', 'Операция не удалась', 'Попробуйте позже');
+              }
+
               $scope.$apply();
             });
         };
