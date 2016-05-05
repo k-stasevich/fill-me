@@ -3,8 +3,8 @@
 
   angular
     .module('app')
-    .controller('LabCtrl', ['$scope', 'toaster', 'CourseService', 'LabService',
-      function($scope, toaster, CourseService, LabService) {
+    .controller('LabCtrl', ['$scope', '$uibModal', 'toaster', 'CourseService', 'LabService',
+      function($scope, $uibModal, toaster, CourseService, LabService) {
         let vm = this;
         vm.selectedLab = {};
         vm.labs = LabService.getLabs();
@@ -23,17 +23,26 @@
         };
 
         vm.deleteLab = function() {
-          return LabService.deleteLab(vm.selectedLab.labId)
-            .then((updatedLabList) => {
-              vm.labs = updatedLabList;
-              vm.selectedLab = {};
-              toaster.pop('success', 'Лабораторная работа успешно удалена!');
-              $scope.$apply();
-            })
-            .catch((err) => {
-              toaster.pop('error', 'Произошла какая-то ошибка', 'попробуйте повторить операцию позже');
-              $scope.$apply();
-            });
+          $uibModal.open({
+            animation: true,
+            templateUrl: 'build/js/pages/labs/delete-lab-popup.html',
+            controller: 'DeleteLabPopupCtrl',
+            resolve: {
+              onSuccess: () => function() {
+                return LabService.deleteLab(vm.selectedLab.labId)
+                  .then((updatedLabList) => {
+                    vm.labs = updatedLabList;
+                    vm.selectedLab = {};
+                    toaster.pop('success', 'Лабораторная работа успешно удалена!');
+                    $scope.$apply();
+                  })
+                  .catch((err) => {
+                    toaster.pop('error', 'Произошла какая-то ошибка', 'попробуйте повторить операцию позже');
+                    $scope.$apply();
+                  });
+              }
+            }
+          });
         };
 
         vm.updateLab = function() {
