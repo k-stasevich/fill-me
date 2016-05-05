@@ -19,6 +19,7 @@ function createQuestion(req, res) {
   }
 
   if (req.body.questionTypeId === QUESTION_TYPES.INPUT.id) {
+
     return questionService.createQuestion({
         courseId: req.body.courseId,
         questionTypeId: req.body.questionTypeId,

@@ -7,7 +7,8 @@
       function($scope, toaster, QuestionService, LabService, CourseService) {
         const VALIDATION_ERRORS = {
           condition: { header: 'Условие', body: 'поле обязательно для заполнения' },
-          answer: { header: 'Ответ', body: 'поле обязательно для заполнения' }
+          answer: { header: 'Ответ', body: 'поле обязательно для заполнения' },
+          labId: { header: 'Лабораторная работа/тема', body: 'не выбрана' }
         };
 
         let vm = this;
@@ -22,8 +23,9 @@
         vm.labs = LabService.getLabs();
         vm.selectedQuestionType = vm.QUESTION_TYPES.INPUT;
         vm.newQuestion = {
+          courseId: CourseService.getAuthorizedCourse().courseId,
           type: vm.QUESTION_TYPES.INPUT,
-          lab: vm.labs[0],
+          lab: vm.labs[0] ? vm.labs[0] : {},
           cost: vm.QUESTION_COST[0],
           condition: '',
           answer: '',
@@ -41,7 +43,7 @@
               answer: vm.newQuestion.answer
             })
             .then((createdQuestion) => {
-              console.log(createdQuestion);
+              toaster.pop('success', 'Вопрос был успешно создан!');
             })
             .catch((err) => {
               if (err.status === 400) {

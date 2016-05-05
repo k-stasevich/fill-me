@@ -17,7 +17,7 @@
       this.addQuestion = function(question) {
         return ApiService.request('/api/sec/question', 'POST', question)
           .then((createdQuestion) => {
-            question.push(createdQuestion);
+            questions.push(createdQuestion);
             return questions;
           })
           .catch((err) => Promise.reject(err));
