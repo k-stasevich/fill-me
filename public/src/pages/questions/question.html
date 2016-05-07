@@ -5,6 +5,7 @@
     </div>
     <div class="row">
       <ng-include src="'../questions/azaza.html'"></ng-include>
+
       <uib-accordion close-others="oneAtATime">
         <uib-accordion-group ng-repeat="lab in question.labs" heading="{{lab.name}}">
 

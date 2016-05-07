@@ -45,6 +45,7 @@
             })
             .then((createdQuestion) => {
               toaster.pop('success', 'Вопрос был успешно создан!');
+              $scope.$apply();
             })
             .catch((err) => {
               if (err.status === 400) {
