@@ -44,6 +44,7 @@
               answer: vm.newQuestion.answer
             })
             .then((createdQuestion) => {
+              clearFields();
               toaster.pop('success', 'Вопрос был успешно создан!');
               $scope.$apply();
             })
@@ -63,5 +64,12 @@
               $scope.$apply();
             });
         };
+
+        function clearFields() {
+          vm.newQuestion.cost = vm.QUESTION_COST[0];
+          vm.newQuestion.condition = '';
+          vm.newQuestion.answer = '';
+          vm.newQuestion.adviser = '';
+        }
       }]);
 })();

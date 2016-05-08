@@ -25,6 +25,7 @@ function createQuestion(req, res) {
   if (req.body.questionTypeId === QUESTION_TYPES.INPUT.id) {
 
     return models.sequelize.transaction((t) => {
+        console.log(req.body);
         return models.question.create({
             fk_course_id: req.body.courseId,
             fk_question_type_id: req.body.questionTypeId,
@@ -36,7 +37,8 @@ function createQuestion(req, res) {
           .then((createdQuestion) => {
             return courseService.read(req.body.courseId)
               .then((foundCourse) => {
-                return createFilesForInputQuestion(req.body.condition, req.body.answer, foundCourse.courseTypeTransl, req.body.labNumber, createdQuestion.questionId)
+                return createFilesForInputQuestion(req.body.condition, req.body.answer, req.body.cost, req.body.adviser,
+                  foundCourse.courseTypeTransl, req.body.labNumber, createdQuestion.questionId)
               }, { transaction: t })
               .then(() => res.json(createdQuestion))
               .catch((err) => {
@@ -47,22 +49,6 @@ function createQuestion(req, res) {
       .catch((err) => {
         res.status(500).json({ errors: [{ msg: ERRORS.INTERNAL_SERVER_ERROR }] })
       });
-
-    //return courseService.read(req.body.courseId)
-    //  .then((foundCourse) => createFilesForInputQuestion(req.body.condition, req.body.answer, foundCourse.courseTypeTransl, req.body.labNumber))
-    //  .then(() => questionService.createQuestion({
-    //    courseId: req.body.courseId,
-    //    questionTypeId: req.body.questionTypeId,
-    //    labId: req.body.labId,
-    //    cost: req.body.cost,
-    //    adviser: req.body.adviser,
-    //    answer: req.body.answer
-    //  }))
-    //  .then((createdQuestion) => res.json(createdQuestion))
-    //  .catch((err) => {
-    //    console.log(err);
-    //    res.status(500).json({ errors: [{ msg: ERRORS.INTERNAL_SERVER_ERROR }] });
-    //  });
   }
 
   if (req.body.questionTypeId === QUESTION_TYPES.CHECKBOX.id) {
@@ -79,16 +65,17 @@ function getQuestions(req, res) {
     .then((questions) => res.json(questions));
 }
 
-function createFilesForInputQuestion(condition, answer, courseName, labNumber, questionId) {
-  let previewHTML =
-    '<div class="panel panel-primary">' +
-    ' <div class="panel-heading">{{addQuestion.newQuestion.condition}}</div>' +
+function createFilesForInputQuestion(condition, answer, cost, adviser, courseName, labNumber, questionId) {
+  const advicerBlock = adviser ? '<div class="panel-footer"><strong>Рекомендация</strong> ' + adviser + '</div>' : '';
+  let previewHTML = '<div class="panel panel-primary">' +
+    ' <div class="panel-heading">' + condition + '</div>' +
     ' <div class="panel-body">' +
     '   <div class="form-group">' +
-    '     <label>Ответ</label>' +
-    '     <input type="text" class="form-control" value="{{addQuestion.newQuestion.answer}}" disabled>' +
-    '     </div>' +
+    '     <label><span class="label label-success">' + cost + '</span> Ответ</label>' +
+    '     <input type="text" class="form-control" value="' + answer + '" disabled>' +
+    '   </div>' +
     ' </div>' +
+    advicerBlock +
     '</div>';
 
   let conditionHTML = '<div class="panel panel-primary">' +
@@ -108,7 +95,13 @@ function createFilesForInputQuestion(condition, answer, courseName, labNumber, q
           return reject({ message: 'file was not saved' });
         }
 
-        return resolve();
+        return fs.writeFile(questionFolderPath + '/preview.html', wrapContent(previewHTML), function(err) {
+          if (err) {
+            return reject({ message: 'file was not saved' });
+          }
+
+          return resolve();
+        })
       });
     });
   });
@@ -120,6 +113,6 @@ function wrapContent(body) {
     '   <meta charset="utf-8">' +
     '   <link rel="stylesheet" href="../../../../node_modules/bootstrap/dist/css/bootstrap.css">' +
     ' </head>' +
-    ' <body><div class="container">' + body + '</div></body>' +
+    ' <body><div class="container-fluid">' + body + '</div></body>' +
     '</html>';
 }

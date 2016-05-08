@@ -4,13 +4,15 @@
       <p><a href="#/questions/add-question" class="btn btn-primary" role="button">Создать вопрос</a>
     </div>
     <div class="row">
-      <ng-include src="'../questions/azaza.html'"></ng-include>
+
 
       <uib-accordion close-others="oneAtATime">
         <uib-accordion-group ng-repeat="lab in question.labs" heading="{{lab.name}}">
 
           <uib-accordion close-others="oneAtATime">
-            <uib-accordion-group ng-repeat="question in lab.questions" heading="какой-то вопрос">
+            <uib-accordion-group
+                    ng-repeat="q in lab.questions" heading="{{$index + 1}}" ng-init="path = question.pathToCourse + '/' + lab.labId + '/' + q.questionId + '/preview.html'">
+              <ng-include src="path"></ng-include>
             </uib-accordion-group>
           </uib-accordion>
 
