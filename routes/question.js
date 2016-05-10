@@ -133,7 +133,7 @@ function insertImages(str, pathPrefix) {
     searchResult.forEach((item) => {
       let fileName = item.slice(2, item.length - 2);
 
-      replaced = replaced.replace(item, '<img src="' + pathPrefix  + fileName + '"/>');
+      replaced = replaced.replace(item, '<img src="' + pathPrefix + fileName + '"/>');
     });
   }
 
@@ -155,13 +155,16 @@ function moveFiles(files) {
 }
 
 function getFileNames(str) {
-  //console.log(str);
   let searchResult = str.match(/{{.*?}}/g);
   let files = [];
 
   if (searchResult) {
     searchResult.forEach((item) => {
-      files.push(item.slice(2, item.length - 2));
+      const fileName = item.slice(2, item.length - 2);
+
+      if (!files.find((existingFile) => existingFile === fileName)) {
+        files.push(fileName);
+      }
     });
   }
 
