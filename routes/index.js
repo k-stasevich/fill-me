@@ -4,4 +4,5 @@ module.exports = function(app) {
   require('./student')(app);
   require('./log')(app);
   require('./question')(app);
+  require('./home')(app);
 };

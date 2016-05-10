@@ -5,7 +5,8 @@
     'ngRoute',
     'ngAnimate',
     'toaster',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'angularFileUpload'
   ]);
 
   app.config(['$routeProvider', function($routeProvider) {

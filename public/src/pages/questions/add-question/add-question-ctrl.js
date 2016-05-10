@@ -3,13 +3,15 @@
 
   angular
     .module('app')
-    .controller('AddQuestionCtrl', ['$scope', 'toaster', 'QuestionService', 'LabService', 'CourseService',
-      function($scope, toaster, QuestionService, LabService, CourseService) {
+    .controller('AddQuestionCtrl', ['$scope', 'toaster', 'FileUploader', 'QuestionService', 'LabService', 'CourseService',
+      function($scope, toaster, FileUploader, QuestionService, LabService, CourseService) {
         const VALIDATION_ERRORS = {
           condition: { header: 'Условие', body: 'поле обязательно для заполнения' },
           answer: { header: 'Ответ', body: 'поле обязательно для заполнения' },
           labId: { header: 'Лабораторная работа/тема', body: 'не выбрана' }
         };
+
+        $scope.fileUploader = new FileUploader();
 
         let vm = this;
 
@@ -44,6 +46,7 @@
               answer: vm.newQuestion.answer
             })
             .then((createdQuestion) => {
+              $scope.fileUploader.queue = [];
               clearFields();
               toaster.pop('success', 'Вопрос был успешно создан!');
               $scope.$apply();
