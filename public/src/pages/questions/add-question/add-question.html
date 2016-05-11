@@ -4,51 +4,104 @@
       <div class="panel panel-primary">
         <div class="panel-heading"><h3>Создание вопроса</h3></div>
         <div class="panel-body">
-          <form>
-            <div class="form-group required">
-              <label>Тип вопроса</label>
-              <select class="form-control" ng-model="addQuestion.newQuestion.type"
-                      ng-options="type as type.description for type in addQuestion.QUESTION_TYPES track by type.id">
-              </select>
+          <br>
+
+          <div class="form-group required">
+            <label>Тип вопроса</label>
+            <select class="form-control" ng-model="addQuestion.newQuestion.type"
+                    ng-options="type as type.description for type in addQuestion.QUESTION_TYPES track by type.id">
+            </select>
+          </div>
+
+          <div class="form-group required">
+            <label>Лабораторная работа/тема</label>
+            <select class="form-control" ng-model="addQuestion.newQuestion.lab"
+                    ng-options="lab as lab.name for lab in addQuestion.labs track by lab.id">
+            </select>
+          </div>
+
+          <div class="form-group required">
+            <label>Стоимость</label>
+            <select class="form-control" ng-model="addQuestion.newQuestion.cost"
+                    ng-options="cost as cost for cost in addQuestion.QUESTION_COST">
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Рекомендации для не ответивших</label>
+            <input type="text" ng-model="addQuestion.newQuestion.adviser" class="form-control">
+          </div>
+
+          <div class="form-group required">
+            <label>Условие</label>
+            <textarea class="form-control no-resize" ng-model="addQuestion.newQuestion.condition" rows="5"></textarea>
+          </div>
+
+          <div ng-show="addQuestion.newQuestion.type.id === addQuestion.QUESTION_TYPES.INPUT.id">
+            <div>
+              <div class="form-group">
+                <label>Ответ</label>
+                <input type="text" ng-model="addQuestion.newQuestion.answer" class="form-control">
+              </div>
             </div>
+          </div>
 
-            <div class="form-group required">
-              <label>Лабораторная работа/тема</label>
-              <select class="form-control" ng-model="addQuestion.newQuestion.lab"
-                      ng-options="lab as lab.name for lab in addQuestion.labs track by lab.id">
-              </select>
-            </div>
-
-            <div class="form-group required">
-              <label>Стоимость</label>
-              <select class="form-control" ng-model="addQuestion.newQuestion.cost"
-                      ng-options="cost as cost for cost in addQuestion.QUESTION_COST">
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label>Рекомендации для не ответивших</label>
-              <input type="text" ng-model="addQuestion.newQuestion.adviser" class="form-control">
-            </div>
-
-            <div ng-show="addQuestion.newQuestion.type.id === addQuestion.QUESTION_TYPES.INPUT.id">
-              <div>
-                <div class="form-group required">
-                  <label>Условие</label>
-                  <textarea class="form-control no-resize" ng-model="addQuestion.newQuestion.condition" rows="5"></textarea>
-                </div>
-
-                <div class="form-group">
-                  <label>Ответ</label>
-                  <input type="text" ng-model="addQuestion.newQuestion.answer" class="form-control">
+          <div ng-show="addQuestion.newQuestion.type.id === addQuestion.QUESTION_TYPES.CHECKBOX.id">
+            <div class="row">
+              <div class="col-sm-12 col-xs-12">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                      <input type="checkbox" ng-model="addQuestion.newQuestion.answer1.isCorrect">
+                    </span>
+                  <input type="text" class="form-control" ng-model="addQuestion.newQuestion.answer1.text">
                 </div>
               </div>
             </div>
+            <div class="row">
+              <div class="col-sm-12 col-xs-12">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                      <input type="checkbox" ng-model="addQuestion.newQuestion.answer2.isCorrect">
+                    </span>
+                  <input type="text" class="form-control" ng-model="addQuestion.newQuestion.answer2.text">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 col-xs-12">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                      <input type="checkbox" ng-model="addQuestion.newQuestion.answer3.isCorrect">
+                    </span>
+                  <input type="text" class="form-control" ng-model="addQuestion.newQuestion.answer3.text">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 col-xs-12">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                      <input type="checkbox" ng-model="addQuestion.newQuestion.answer4.isCorrect">
+                    </span>
+                  <input type="text" class="form-control" ng-model="addQuestion.newQuestion.answer4.text">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 col-xs-12">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                      <input type="checkbox" ng-model="addQuestion.newQuestion.answer5.isCorrect">
+                    </span>
+                  <input type="text" class="form-control" ng-model="addQuestion.newQuestion.answer5.text">
+                </div>
+              </div>
+            </div>
+            </br>
+          </div>
+          <div ng-show="addQuestion.newQuestion.type.id === addQuestion.QUESTION_TYPES.RELATION.id">3</div>
 
-            <div ng-show="addQuestion.newQuestion.type.id === addQuestion.QUESTION_TYPES.CHECKBOX.id">2</div>
-            <div ng-show="addQuestion.newQuestion.type.id === addQuestion.QUESTION_TYPES.RELATION.id">3</div>
-
-            <button type="button" class="btn btn-primary" ng-click="addQuestion.addQuestion()" ng-disabled="addQuestion.canAdd">Добавить вопрос</button>
+          <button type="button" class="btn btn-primary" ng-click="addQuestion.addQuestion()" ng-disabled="addQuestion.canAdd">Добавить вопрос</button>
           </form>
         </div>
       </div>

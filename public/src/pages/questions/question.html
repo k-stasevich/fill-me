@@ -10,7 +10,7 @@
         <uib-accordion-group ng-repeat="lab in question.labs" heading="{{lab.name}}">
           <uib-accordion close-others="oneAtATime">
             <uib-accordion-group
-              ng-repeat="q in lab.questions" heading="{{$index + 1}}" ng-init="path = question.pathToCourse + '/' + lab.number + '/' + q.questionId + '/preview.html'">
+              ng-repeat="q in lab.questions" heading="№{{$index + 1}}. Стоимость - {{q.cost}}" ng-init="path = question.pathToCourse + '/' + lab.number + '/' + q.questionId + '/preview.html'">
               <p>
                 <button ng-click="question.deleteQuestion(q.questionId)" class="btn btn-danger">Удалить вопрос</button>
               </p>

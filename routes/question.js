@@ -27,39 +27,69 @@ function createQuestion(req, res) {
     return res.status(400).json({ errors: errors });
   }
 
+  let newQuestion = {
+    fk_course_id: req.body.courseId,
+    fk_question_type_id: req.body.questionTypeId,
+    fk_lab_id: req.body.labId,
+    cost: req.body.cost,
+    adviser: req.body.adviser
+  };
+
   if (req.body.questionTypeId === QUESTION_TYPES.INPUT.id) {
-    return models.sequelize.transaction((t) => {
-        return models.question.create({
-            fk_course_id: req.body.courseId,
-            fk_question_type_id: req.body.questionTypeId,
-            fk_lab_id: req.body.labId,
-            cost: req.body.cost,
-            adviser: req.body.adviser,
-            answer: req.body.answer
-          }, { transaction: t })
-          .then((createdQuestion) => {
-            return courseService.read(req.body.courseId)
-              .then((foundCourse) => {
-                return createFilesForInputQuestion(req.body.condition, req.body.answer, req.body.cost, req.body.adviser, foundCourse.courseTypeTransl, req.body.labNumber, createdQuestion.questionId)
-              }, { transaction: t })
-              .then(() => res.json(createdQuestion))
-              .catch((err) => {
-                throw new Error();
-              });
-          });
-      })
-      .catch((err) => {
-        res.status(500).json({ errors: [{ msg: ERRORS.INTERNAL_SERVER_ERROR }] })
-      });
+    newQuestion.answer = req.body.answer;
   }
 
   if (req.body.questionTypeId === QUESTION_TYPES.CHECKBOX.id) {
+    let answerStr = '';
 
+    for (let i = 1; i <= 5; i++) {
+      if (req.body['answer' + i].isCorrect) {
+        if (answerStr) {
+          answerStr += ' ' + i;
+        } else {
+          answerStr += i;
+        }
+      }
+    }
+
+    newQuestion.answer = answerStr;
   }
 
   if (req.body.questionTypeId === QUESTION_TYPES.RELATION.id) {
 
   }
+
+  return models.sequelize.transaction((t) => {
+      return models.question.create(newQuestion, { transaction: t })
+        .then((createdQuestion) => {
+          return courseService.read(req.body.courseId)
+            .then((foundCourse) => {
+              switch (req.body.questionTypeId) {
+                case QUESTION_TYPES.INPUT.id:
+                  return createFilesForInputQuestion(req.body.condition, req.body.answer, req.body.cost, req.body.adviser, foundCourse.courseTypeTransl, req.body.labNumber, createdQuestion.questionId);
+                  break;
+                case QUESTION_TYPES.CHECKBOX.id:
+                  return createFilesForCheckboxQuestion(req.body.condition, {
+                    answer1: req.body.answer1,
+                    answer2: req.body.answer2,
+                    answer3: req.body.answer3,
+                    answer4: req.body.answer4,
+                    answer5: req.body.answer5
+                  }, req.body.cost, req.body.adviser, foundCourse.courseTypeTransl, req.body.labNumber, createdQuestion.questionId);
+                  break;
+                case QUESTION_TYPES.RELATION.id:
+                  return Promise.resolve();
+              }
+            }, { transaction: t })
+            .then(() => res.json(createdQuestion))
+            .catch((err) => {
+              throw new Error();
+            });
+        });
+    })
+    .catch((err) => {
+      res.status(500).json({ errors: [{ msg: ERRORS.INTERNAL_SERVER_ERROR }] })
+    });
 }
 
 function getQuestions(req, res) {
@@ -94,12 +124,12 @@ function createFilesForInputQuestion(condition, answer, cost, adviser, courseNam
   const conditionWithImageWithRelativePath = insertImages(condition, 'img/');
   const conditionWithImageWithServerPath = insertImages(condition, 'questions/' + courseName + '/' + labNumber + '/' + questionId + '/img/');
 
-  const advicerBlock = adviser ? '<div class="panel-footer"><strong>Рекомендация</strong> ' + adviser + '</div>' : '';
+  const advicerBlock = buildAdvicer(adviser);
   let previewHTML = '<div class="panel panel-primary">' +
-    ' <div class="panel-heading">' + conditionWithImageWithServerPath + '</div>' +
+    buildQuestionHeader(conditionWithImageWithServerPath) +
     ' <div class="panel-body">' +
     '   <div class="form-group">' +
-    '     <label><span class="label label-success">' + cost + '</span> Ответ</label>' +
+    '     <label>Ответ</label>' +
     '     <input type="text" class="form-control" value="' + answer + '" disabled>' +
     '   </div>' +
     ' </div>' +
@@ -110,33 +140,56 @@ function createFilesForInputQuestion(condition, answer, cost, adviser, courseNam
     ' <div class="panel-heading">' + conditionWithImageWithRelativePath + '</div>' +
     '</div>';
 
-  return new Promise((resolve, reject) => {
-    mkdirp(questionFolderPath, function(err) {
-      if (err) {
-        return reject({ message: 'directory for question was not created' });
-      }
+  return gatherImagesForQuestion(questionFolderPath, fileNames, conditionHTML, previewHTML);
+}
 
-      return moveFiles(fileNames.map((fileName) => {
-        return { from: 'temp-files/' + fileName, to: questionFolderPath + '/img/' + fileName };
-      }))
-        .then(() => {
-          return fs.writeFile(questionFolderPath + '/condition.html', wrapContent(conditionHTML), function(err) {
-            if (err) {
-              return reject({ message: 'file was not saved' });
-            }
+function createFilesForCheckboxQuestion(condition, answers, cost, adviser, courseName, labNumber, questionId) {
 
-            return fs.writeFile(questionFolderPath + '/preview.html', wrapContent(previewHTML), function(err) {
-              if (err) {
-                return reject({ message: 'file was not saved' });
-              }
+  const questionFolderPath = 'public/questions/' + courseName + '/' + labNumber + '/' + questionId;
+  const fileNames = getFileNames(condition, answers.answer1.text, answers.answer2.text, answers.answer3.text, answers.answer4.text, answers.answer5.text);
+  const relativePathToImages = 'img/';
+  const serverPathToImages = 'questions/' + courseName + '/' + labNumber + '/' + questionId + '/img/';
 
-              return resolve();
-            })
-          });
-        })
-        .catch((err) => reject(err));
-    });
-  });
+  const withRelativePath = {
+    condition: insertImages(condition, relativePathToImages),
+    answer1: '<li class="list-group-item">' + insertImages(answers.answer1.text, relativePathToImages) + '</li>',
+    answer2: '<li class="list-group-item">' + insertImages(answers.answer2.text, relativePathToImages) + '</li>',
+    answer3: '<li class="list-group-item">' + insertImages(answers.answer3.text, relativePathToImages) + '</li>',
+    answer4: '<li class="list-group-item">' + insertImages(answers.answer4.text, relativePathToImages) + '</li>',
+    answer5: '<li class="list-group-item">' + insertImages(answers.answer5.text, relativePathToImages) + '</li>'
+  };
+  const withServerPath = {
+    condition: insertImages(condition, serverPathToImages),
+    answer1: answers.answer1.isCorrect ? '<li class="list-group-item active">' + insertImages(answers.answer1.text, serverPathToImages) + '</li>' : '<li class="list-group-item">' + insertImages(answers.answer1.text, serverPathToImages) + '</li>',
+    answer2: answers.answer2.isCorrect ? '<li class="list-group-item active">' + insertImages(answers.answer2.text, serverPathToImages) + '</li>' : '<li class="list-group-item">' + insertImages(answers.answer2.text, serverPathToImages) + '</li>',
+    answer3: answers.answer3.isCorrect ? '<li class="list-group-item active">' + insertImages(answers.answer3.text, serverPathToImages) + '</li>' : '<li class="list-group-item">' + insertImages(answers.answer3.text, serverPathToImages) + '</li>',
+    answer4: answers.answer4.isCorrect ? '<li class="list-group-item active">' + insertImages(answers.answer4.text, serverPathToImages) + '</li>' : '<li class="list-group-item">' + insertImages(answers.answer4.text, serverPathToImages) + '</li>',
+    answer5: answers.answer5.isCorrect ? '<li class="list-group-item active">' + insertImages(answers.answer5.text, serverPathToImages) + '</li>' : '<li class="list-group-item">' + insertImages(answers.answer5.text, serverPathToImages) + '</li>'
+  };
+  const advicerBlock = buildAdvicer(adviser);
+
+  let previewHTML = '<div class="panel panel-primary">' +
+    buildQuestionHeader(withServerPath.condition) +
+    ' <div class="panel-body">' +
+    '   <ul class="list-group">' + withServerPath.answer1 + withServerPath.answer2 + withServerPath.answer3 + withServerPath.answer4 + withServerPath.answer5 +
+    '   </ul >' +
+    ' </div>' +
+    advicerBlock +
+    '</div>';
+
+  let conditionHTML = '<div class="panel panel-primary">' +
+    buildQuestionHeader(withServerPath.condition) +
+    ' <div class="panel-body">' +
+    '   <ul class="list-group">' + withRelativePath.answer1 + withRelativePath.answer2 + withRelativePath.answer3 + withRelativePath.answer4 + withRelativePath.answer5 +
+    '   </ul >' +
+    ' </div>' +
+    advicerBlock +
+    '</div>';
+
+  return gatherImagesForQuestion(questionFolderPath, fileNames, conditionHTML, previewHTML)
+    .then(() => {
+      return Promise.resolve({ success: true });
+    })
 }
 
 function wrapContent(body) {
@@ -178,19 +231,65 @@ function moveFiles(files) {
   }));
 }
 
-function getFileNames(str) {
-  let searchResult = str.match(/{{.*?}}/g);
+function getFileNames() {
   let files = [];
 
-  if (searchResult) {
-    searchResult.forEach((item) => {
-      const fileName = item.slice(2, item.length - 2);
+  for (let i = 0; i < arguments.length; i++) {
+    let searchResult = arguments[i].match(/{{.*?}}/g);
 
-      if (!files.find((existingFile) => existingFile === fileName)) {
-        files.push(fileName);
-      }
-    });
+    if (searchResult) {
+      searchResult.forEach((item) => {
+        const fileName = item.slice(2, item.length - 2);
+
+        if (!files.find((existingFile) => existingFile === fileName)) {
+          files.push(fileName);
+        }
+      });
+    }
   }
 
+
   return files;
+}
+
+function gatherImagesForQuestion(questionFolderPath, fileNames, conditionHTML, previewHTML) {
+  return new Promise((resolve, reject) => {
+    mkdirp(questionFolderPath, function(err) {
+      if (err) {
+        return reject({ message: 'directory for question was not created' });
+      }
+
+      return moveFiles(fileNames.map((fileName) => {
+        return { from: 'temp-files/' + fileName, to: questionFolderPath + '/img/' + fileName };
+      }))
+        .then(() => {
+          return fs.writeFile(questionFolderPath + '/condition.html', wrapContent(conditionHTML), function(err) {
+            if (err) {
+              return reject({ message: 'file was not saved' });
+            }
+
+            return fs.writeFile(questionFolderPath + '/preview.html', wrapContent(previewHTML), function(err) {
+              if (err) {
+                return reject({ message: 'file was not saved' });
+              }
+
+              return resolve();
+            })
+          });
+        })
+        .catch((err) => {
+          rmdir(questionFolderPath, (deleteFolderError) => reject(err));
+        });
+    });
+  });
+}
+
+function buildAdvicer(adviser) {
+  return adviser ?
+  '<div class="panel-footer"><strong>Рекомендация</strong> ' + adviser + '</div>' :
+    '';
+}
+
+function buildQuestionHeader(condition) {
+  return '<div class="panel-heading">' + condition + ' </div>';
 }

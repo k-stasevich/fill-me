@@ -8,7 +8,13 @@
         const VALIDATION_ERRORS = {
           condition: { header: 'Условие', body: 'поле обязательно для заполнения' },
           answer: { header: 'Ответ', body: 'поле обязательно для заполнения' },
-          labId: { header: 'Лабораторная работа/тема', body: 'не выбрана' }
+          no_one_correct: { header: 'Ответ', body: 'Не выбрано ни одного верного ответа' },
+          labId: { header: 'Лабораторная работа/тема', body: 'не выбрана' },
+          answer1: { header: 'Ответ1', body: 'заполните поле "Ответ1"' },
+          answer2: { header: 'Ответ2', body: 'заполните поле "Ответ2"' },
+          answer3: { header: 'Ответ3', body: 'заполните поле "Ответ3"' },
+          answer4: { header: 'Ответ4', body: 'заполните поле "Ответ4"' },
+          answer5: { header: 'Ответ5', body: 'заполните поле "Ответ5"' }
         };
 
         let vm = this;
@@ -36,16 +42,7 @@
         vm.isAddButtonDisabled = false;
 
         vm.addQuestion = function() {
-          return QuestionService.addQuestion({
-              courseId: CourseService.getAuthorizedCourse().courseId,
-              questionTypeId: vm.newQuestion.type.id,
-              labId: vm.newQuestion.lab.labId,
-              labNumber: vm.newQuestion.lab.number,
-              cost: vm.newQuestion.cost,
-              condition: vm.newQuestion.condition,
-              adviser: vm.newQuestion.adviser,
-              answer: vm.newQuestion.answer
-            })
+          return addQuestion()
             .then((createdQuestion) => {
               vm.fileUploader.queue = [];
               clearFields();
@@ -88,10 +85,62 @@
           vm.newQuestion.condition = '';
           vm.newQuestion.answer = '';
           vm.newQuestion.adviser = '';
+          vm.newQuestion.answer1 = {};
+          vm.newQuestion.answer2 = {};
+          vm.newQuestion.answer3 = {};
+          vm.newQuestion.answer4 = {};
+          vm.newQuestion.answer5 = {};
         }
 
         function checkIfAllFilesLoaded() {
           return !vm.fileUploader.queue.find((file) => file.isUploaded === false);
+        }
+
+        function addQuestion() {
+          if (vm.newQuestion.type.id === vm.QUESTION_TYPES.INPUT.id) {
+            return addInputQuestion();
+          }
+
+          if (vm.newQuestion.type.id === vm.QUESTION_TYPES.CHECKBOX.id) {
+            return addCheckboxQuestion();
+          }
+
+          if (vm.newQuestion.type.id === vm.QUESTION_TYPES.RELATION.id) {
+            return Promise.resolve();
+          }
+        }
+
+        function addInputQuestion() {
+          return QuestionService.addQuestion({
+            courseId: CourseService.getAuthorizedCourse().courseId,
+            questionTypeId: vm.newQuestion.type.id,
+            labId: vm.newQuestion.lab.labId,
+            labNumber: vm.newQuestion.lab.number,
+            cost: vm.newQuestion.cost,
+            condition: vm.newQuestion.condition,
+            adviser: vm.newQuestion.adviser,
+            answer: vm.newQuestion.answer
+          });
+        }
+
+        function addCheckboxQuestion() {
+          let options = {
+            courseId: CourseService.getAuthorizedCourse().courseId,
+            questionTypeId: vm.newQuestion.type.id,
+            labId: vm.newQuestion.lab.labId,
+            labNumber: vm.newQuestion.lab.number,
+            cost: vm.newQuestion.cost,
+            condition: vm.newQuestion.condition,
+            adviser: vm.newQuestion.adviser
+          };
+
+          for (let i = 1; i <= 5; i++) {
+            if (vm.newQuestion['answer' + i]) {
+              options['answer' + i] = vm.newQuestion['answer' + i];
+            }
+          }
+
+          return QuestionService.addQuestion(options);
         }
       }]);
 })();
