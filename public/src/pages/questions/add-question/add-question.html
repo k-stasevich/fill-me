@@ -16,7 +16,7 @@
           <div class="form-group required">
             <label>Лабораторная работа/тема</label>
             <select class="form-control" ng-model="addQuestion.newQuestion.lab"
-                    ng-options="lab as lab.name for lab in addQuestion.labs track by lab.id">
+                    ng-options="lab as lab.name for lab in addQuestion.labs track by lab.labId">
             </select>
           </div>
 
