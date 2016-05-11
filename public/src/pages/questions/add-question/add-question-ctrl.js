@@ -106,7 +106,7 @@
           }
 
           if (vm.newQuestion.type.id === vm.QUESTION_TYPES.RELATION.id) {
-            return Promise.resolve();
+            return addRelationQuestion();
           }
         }
 
@@ -124,23 +124,37 @@
         }
 
         function addCheckboxQuestion() {
-          let options = {
+          return QuestionService.addQuestion({
             courseId: CourseService.getAuthorizedCourse().courseId,
             questionTypeId: vm.newQuestion.type.id,
             labId: vm.newQuestion.lab.labId,
             labNumber: vm.newQuestion.lab.number,
             cost: vm.newQuestion.cost,
             condition: vm.newQuestion.condition,
-            adviser: vm.newQuestion.adviser
-          };
+            adviser: vm.newQuestion.adviser,
+            answer1: vm.newQuestion.answer1,
+            answer2: vm.newQuestion.answer2,
+            answer3: vm.newQuestion.answer3,
+            answer4: vm.newQuestion.answer4,
+            answer5: vm.newQuestion.answer5
+          });
+        }
 
-          for (let i = 1; i <= 5; i++) {
-            if (vm.newQuestion['answer' + i]) {
-              options['answer' + i] = vm.newQuestion['answer' + i];
-            }
-          }
-
-          return QuestionService.addQuestion(options);
+        function addRelationQuestion() {
+          return QuestionService.addQuestion({
+            courseId: CourseService.getAuthorizedCourse().courseId,
+            questionTypeId: vm.newQuestion.type.id,
+            labId: vm.newQuestion.lab.labId,
+            labNumber: vm.newQuestion.lab.number,
+            cost: vm.newQuestion.cost,
+            condition: vm.newQuestion.condition,
+            adviser: vm.newQuestion.adviser,
+            answer1: vm.newQuestion.answer1,
+            answer2: vm.newQuestion.answer2,
+            answer3: vm.newQuestion.answer3,
+            answer4: vm.newQuestion.answer4,
+            answer5: vm.newQuestion.answer5
+          });
         }
       }]);
 })();

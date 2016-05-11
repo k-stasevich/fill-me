@@ -36,7 +36,11 @@ module.exports = {
     }
 
     if (req.body.questionTypeId && req.body.questionTypeId === QUESTION_TYPES.RELATION.id) {
-
+      for (let i = 1; i <= 5; i++) {
+        if (!req.body['answer' + i] || !req.body['answer' + i].text || !req.body['answer' + i].linked) {
+          req._validationErrors.push({ param: 'answer' + i, msg: 'VALIDATION_ERROR' });
+        }
+      }
     }
 
     return req.validationErrors();
