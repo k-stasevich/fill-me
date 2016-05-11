@@ -87,7 +87,7 @@ function createFilesForInputQuestion(condition, answer, cost, adviser, courseNam
     '</div>';
 
   return new Promise((resolve, reject) => {
-    mkdirp(questionFolderPath, function(err) {
+    mkdirp(questionFolderPath, function(err) { 
       if (err) {
         return reject({ message: 'directory for question was not created' });
       }

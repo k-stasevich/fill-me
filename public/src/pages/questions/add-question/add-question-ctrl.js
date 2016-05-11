@@ -11,9 +11,9 @@
           labId: { header: 'Лабораторная работа/тема', body: 'не выбрана' }
         };
 
-        $scope.fileUploader = new FileUploader();
-
         let vm = this;
+
+        vm.fileUploader = new FileUploader();
 
         vm.QUESTION_TYPES = {
           INPUT: { id: 1, description: 'Ввод ответа c клавиатуры' },
