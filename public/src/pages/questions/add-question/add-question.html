@@ -99,7 +99,50 @@
             </div>
             </br>
           </div>
-          <div ng-show="addQuestion.newQuestion.type.id === addQuestion.QUESTION_TYPES.RELATION.id">3</div>
+
+          <div ng-show="addQuestion.newQuestion.type.id === addQuestion.QUESTION_TYPES.RELATION.id">
+            <div class="row">
+              <div class="col-sm-6 col-xs-6">
+                <input type="text" class="form-control" ng-model="addQuestion.newQuestion.answer1.text">
+              </div>
+              <div class="col-sm-6 col-xs-6">
+                <input type="text" class="form-control" ng-model="addQuestion.newQuestion.answer1.linked">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 col-xs-6">
+                <input type="text" class="form-control" ng-model="addQuestion.newQuestion.answer2.text">
+              </div>
+              <div class="col-sm-6 col-xs-6">
+                <input type="text" class="form-control" ng-model="addQuestion.newQuestion.answer2.linked">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 col-xs-6">
+                <input type="text" class="form-control" ng-model="addQuestion.newQuestion.answer3.text">
+              </div>
+              <div class="col-sm-6 col-xs-6">
+                <input type="text" class="form-control" ng-model="addQuestion.newQuestion.answer3.linked">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 col-xs-6">
+                <input type="text" class="form-control" ng-model="addQuestion.newQuestion.answer4.text">
+              </div>
+              <div class="col-sm-6 col-xs-6">
+                <input type="text" class="form-control" ng-model="addQuestion.newQuestion.answer4.linked">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 col-xs-6">
+                <input type="text" class="form-control" ng-model="addQuestion.newQuestion.answer5.text">
+              </div>
+              <div class="col-sm-6 col-xs-6">
+                <input type="text" class="form-control" ng-model="addQuestion.newQuestion.answer5.linked">
+              </div>
+            </div>
+            </br>
+          </div>
 
           <button type="button" class="btn btn-primary" ng-click="addQuestion.addQuestion()" ng-disabled="addQuestion.canAdd">Добавить вопрос</button>
           </form>
