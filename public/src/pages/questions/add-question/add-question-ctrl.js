@@ -47,7 +47,7 @@
               answer: vm.newQuestion.answer
             })
             .then((createdQuestion) => {
-              $scope.fileUploader.queue = [];
+              vm.fileUploader.queue = [];
               clearFields();
               toaster.pop('success', 'Вопрос был успешно создан!');
               $scope.$apply();
@@ -67,6 +67,11 @@
 
               $scope.$apply();
             });
+        };
+
+        vm.removeFile = function(item) {
+          vm.fileUploader.removeFromQueue(item);
+          vm.canAdd = !checkIfAllFilesLoaded();
         };
 
         vm.fileUploader.onAfterAddingFile = function(fileItem) {

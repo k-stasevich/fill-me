@@ -5,6 +5,7 @@ const courseService = require('../services/course-service');
 const questionValidator = require('../validators/question-validator');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
+const rmdir = require('rmdir');
 const move = require('mv');
 const models = require('../models');
 
@@ -15,6 +16,9 @@ module.exports = function(app) {
   app.route('/api/sec/question')
     .post(createQuestion)
     .get(getQuestions);
+
+  app.route('/api/sec/question/:id')
+    .delete(deleteQuestion);
 };
 
 function createQuestion(req, res) {
@@ -63,6 +67,26 @@ function getQuestions(req, res) {
     .then((questions) => res.json(questions));
 }
 
+function deleteQuestion(req, res) {
+  return questionService.read(req.params.id)
+    .then((question) => {
+      return new Promise((resolve, reject) => {
+        const pathToQuestion = 'public/questions/' + question.Course.courseTypeTransl + '/' + question.Lab.number + '/' + question.questionId;
+
+        rmdir(pathToQuestion, function(err, dirs, files) {
+          if (err) {
+            return reject({ status: 500 });
+          }
+
+          return resolve();
+        });
+      })
+        .then(() => questionService.delete(req.params.id))
+        .then((affected) => res.json(req.params.id));
+    })
+    .catch((err) => res.status(err.status).json({ success: false }));
+}
+
 function createFilesForInputQuestion(condition, answer, cost, adviser, courseName, labNumber, questionId) {
   const questionFolderPath = 'public/questions/' + courseName + '/' + labNumber + '/' + questionId;
 
@@ -87,7 +111,7 @@ function createFilesForInputQuestion(condition, answer, cost, adviser, courseNam
     '</div>';
 
   return new Promise((resolve, reject) => {
-    mkdirp(questionFolderPath, function(err) { 
+    mkdirp(questionFolderPath, function(err) {
       if (err) {
         return reject({ message: 'directory for question was not created' });
       }

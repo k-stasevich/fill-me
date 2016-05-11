@@ -3,8 +3,8 @@
 
   angular
     .module('app')
-    .controller('QuestionCtrl', ['$scope', 'QuestionService', 'LabService', 'CourseService',
-      function($scope, QuestionService, LabService, CourseService) {
+    .controller('QuestionCtrl', ['$scope', 'toaster', 'QuestionService', 'LabService', 'CourseService',
+      function($scope, toaster, QuestionService, LabService, CourseService) {
         let vm = this;
 
         vm.questions = QuestionService.getQuestions();
@@ -14,5 +14,18 @@
         vm.findLabQuestions = function(labId) {
           return vm.questions.findAll((item) => item.labId === labId);
         };
+
+        vm.deleteQuestion = function(questionId) {
+          return QuestionService.deleteQuestion(questionId)
+            .then((updatedQuestionList) => {
+              vm.questions = updatedQuestionList;
+              toaster.pop('success', 'Вопрос успешно удален!');
+              $scope.$apply();
+            })
+            .catch(() => {
+              toaster.pop('error', 'Такого вопроса больше нет');
+              $scope.$apply();
+            });
+        }
       }]);
 })();
