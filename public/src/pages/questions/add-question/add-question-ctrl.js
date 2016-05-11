@@ -33,6 +33,7 @@
           answer: '',
           adviser: ''
         };
+        vm.isAddButtonDisabled = false;
 
         vm.addQuestion = function() {
           return QuestionService.addQuestion({
@@ -68,11 +69,24 @@
             });
         };
 
+        vm.fileUploader.onAfterAddingFile = function(fileItem) {
+          vm.canAdd = !checkIfAllFilesLoaded();
+          $scope.$apply();
+        };
+        vm.fileUploader.onCompleteAll = function() {
+          vm.canAdd = !checkIfAllFilesLoaded();
+          $scope.$apply();
+        };
+
         function clearFields() {
           vm.newQuestion.cost = vm.QUESTION_COST[0];
           vm.newQuestion.condition = '';
           vm.newQuestion.answer = '';
           vm.newQuestion.adviser = '';
+        }
+
+        function checkIfAllFilesLoaded() {
+          return !vm.fileUploader.queue.find((file) => file.isUploaded === false);
         }
       }]);
 })();

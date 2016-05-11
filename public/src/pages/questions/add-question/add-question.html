@@ -48,7 +48,7 @@
             <div ng-show="addQuestion.newQuestion.type.id === addQuestion.QUESTION_TYPES.CHECKBOX.id">2</div>
             <div ng-show="addQuestion.newQuestion.type.id === addQuestion.QUESTION_TYPES.RELATION.id">3</div>
 
-            <button type="button" class="btn btn-primary" ng-click="addQuestion.addQuestion()">Добавить вопрос</button>
+            <button type="button" class="btn btn-primary" ng-click="addQuestion.addQuestion()" ng-disabled="addQuestion.canAdd">Добавить вопрос</button>
           </form>
         </div>
       </div>
