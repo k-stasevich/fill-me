@@ -246,12 +246,18 @@ function insertImages(str, pathPrefix) {
 function moveFiles(files) {
   return Promise.all(files.map((item) => {
     return new Promise((resolve, reject) => {
-      move(item.from, item.to, { mkdirp: true }, function(err) {
-        if (err) {
-          return reject({ message: 'CANNOT MOVE FILES' });
-        }
+      fs.exists(item.from, (exists) => {
+        if (exists) {
+          move(item.from, item.to, { mkdirp: true }, function(err) {
+            if (err) {
+              return reject({ message: 'CANNOT MOVE FILES' });
+            }
 
-        return resolve();
+            return resolve();
+          });
+        } else {
+          resolve();
+        }
       });
     });
   }));
@@ -319,7 +325,7 @@ function createFilesForVariants(questionFolderPath, answers) {
       });
     }));
   }
-  
+
   return Promise.all(promiseArr);
 }
 
