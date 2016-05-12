@@ -64,14 +64,20 @@ function createQuestion(req, res) {
     newQuestion.answer = '1 2 3 4 5'; // magic for another project that will use it :(
   }
 
+  let questionFolderServerPath;
+  let questionFolderPath;
+
   return models.sequelize.transaction((t) => {
       return models.question.create(newQuestion, { transaction: t })
         .then((createdQuestion) => {
           return courseService.read(req.body.courseId)
             .then((foundCourse) => {
+              questionFolderServerPath = 'questions/' + foundCourse.courseTypeTransl + '/' + req.body.labNumber + '/' + createdQuestion.questionId;
+              questionFolderPath = 'public/' + questionFolderServerPath;
+
               switch (req.body.questionTypeId) {
                 case QUESTION_TYPES.INPUT.id:
-                  return createFilesForInputQuestion(req.body.condition, req.body.answer, req.body.adviser, foundCourse.courseTypeTransl, req.body.labNumber, createdQuestion.questionId);
+                  return createFilesForInputQuestion(req.body.condition, req.body.answer, req.body.adviser, questionFolderServerPath, questionFolderPath);
                   break;
                 case QUESTION_TYPES.CHECKBOX.id:
                   return createFilesForCheckboxQuestion(req.body.condition, {
@@ -80,7 +86,7 @@ function createQuestion(req, res) {
                     answer3: req.body.answer3,
                     answer4: req.body.answer4,
                     answer5: req.body.answer5
-                  }, req.body.adviser, foundCourse.courseTypeTransl, req.body.labNumber, createdQuestion.questionId);
+                  }, req.body.adviser, questionFolderServerPath, questionFolderPath);
                   break;
                 case QUESTION_TYPES.RELATION.id:
                   return createFilesForRelationQuestion(req.body.condition, {
@@ -89,19 +95,15 @@ function createQuestion(req, res) {
                     answer3: req.body.answer3,
                     answer4: req.body.answer4,
                     answer5: req.body.answer5
-                  }, req.body.adviser, foundCourse.courseTypeTransl, req.body.labNumber, createdQuestion.questionId);
+                  }, req.body.adviser, questionFolderServerPath, questionFolderPath);
                   break;
               }
             }, { transaction: t })
             .then(() => res.json(createdQuestion))
-            .catch((err) => {
-              throw new Error();
-            });
+            .catch((err) => removeDirectory(questionFolderPath))
         });
     })
-    .catch((err) => {
-      res.status(500).json({ errors: [{ msg: ERRORS.INTERNAL_SERVER_ERROR }] })
-    });
+    .catch((err) => res.status(500).json({ errors: [{ msg: ERRORS.INTERNAL_SERVER_ERROR }] }));
 }
 
 function getQuestions(req, res) {
@@ -129,14 +131,10 @@ function deleteQuestion(req, res) {
     .catch((err) => res.status(err.status).json({ success: false }));
 }
 
-function createFilesForInputQuestion(condition, answer, adviser, courseName, labNumber, questionId) {
-  const questionFolderPath = 'public/questions/' + courseName + '/' + labNumber + '/' + questionId;
-
+function createFilesForInputQuestion(condition, answer, adviser, questionFolderServerPath, questionFolderPath) {
   const fileNames = getFileNames(condition);
-  const conditionWithImageWithRelativePath = insertImages(condition, 'img/');
-  const conditionWithImageWithServerPath = insertImages(condition, 'questions/' + courseName + '/' + labNumber + '/' + questionId + '/img/');
+  const conditionWithImageWithServerPath = insertImages(condition, questionFolderServerPath + '/img/');
 
-  const advicerBlock = buildAdvicer(adviser);
   let previewHTML = '<div class="panel panel-primary">' +
     buildQuestionHeader(conditionWithImageWithServerPath) +
     ' <div class="panel-body">' +
@@ -145,30 +143,18 @@ function createFilesForInputQuestion(condition, answer, adviser, courseName, lab
     '     <input type="text" class="form-control" value="' + answer + '" disabled>' +
     '   </div>' +
     ' </div>' +
-    advicerBlock +
+    buildAdvicer(adviser) +
     '</div>';
 
-  let conditionHTML = '<div class="panel panel-primary">' +
-    ' <div class="panel-heading">' + conditionWithImageWithRelativePath + '</div>' +
-    '</div>';
-
-  return gatherImagesForQuestion(questionFolderPath, fileNames, conditionHTML, previewHTML);
+  return gatherImagesForQuestion(questionFolderPath, fileNames)
+    .then(() => createConditionHtmlFile(questionFolderPath, condition))
+    .then(() => createPreviewHtmlFile(questionFolderPath, previewHTML));
 }
 
-function createFilesForCheckboxQuestion(condition, answers, adviser, courseName, labNumber, questionId) {
-  const questionFolderPath = 'public/questions/' + courseName + '/' + labNumber + '/' + questionId;
+function createFilesForCheckboxQuestion(condition, answers, adviser, questionFolderServerPath, questionFolderPath) {
   const fileNames = getFileNames(condition, answers.answer1.text, answers.answer2.text, answers.answer3.text, answers.answer4.text, answers.answer5.text);
-  const relativePathToImages = 'img/';
-  const serverPathToImages = 'questions/' + courseName + '/' + labNumber + '/' + questionId + '/img/';
+  const serverPathToImages = questionFolderServerPath + '/img/';
 
-  const withRelativePath = {
-    condition: insertImages(condition, relativePathToImages),
-    answer1: '<li class="list-group-item">' + insertImages(answers.answer1.text, relativePathToImages) + '</li>',
-    answer2: '<li class="list-group-item">' + insertImages(answers.answer2.text, relativePathToImages) + '</li>',
-    answer3: '<li class="list-group-item">' + insertImages(answers.answer3.text, relativePathToImages) + '</li>',
-    answer4: '<li class="list-group-item">' + insertImages(answers.answer4.text, relativePathToImages) + '</li>',
-    answer5: '<li class="list-group-item">' + insertImages(answers.answer5.text, relativePathToImages) + '</li>'
-  };
   const withServerPath = {
     condition: insertImages(condition, serverPathToImages),
     answer1: answers.answer1.isCorrect ? '<li class="list-group-item active">' + insertImages(answers.answer1.text, serverPathToImages) + '</li>' : '<li class="list-group-item">' + insertImages(answers.answer1.text, serverPathToImages) + '</li>',
@@ -177,7 +163,6 @@ function createFilesForCheckboxQuestion(condition, answers, adviser, courseName,
     answer4: answers.answer4.isCorrect ? '<li class="list-group-item active">' + insertImages(answers.answer4.text, serverPathToImages) + '</li>' : '<li class="list-group-item">' + insertImages(answers.answer4.text, serverPathToImages) + '</li>',
     answer5: answers.answer5.isCorrect ? '<li class="list-group-item active">' + insertImages(answers.answer5.text, serverPathToImages) + '</li>' : '<li class="list-group-item">' + insertImages(answers.answer5.text, serverPathToImages) + '</li>'
   };
-  const advicerBlock = buildAdvicer(adviser);
 
   let previewHTML = '<div class="panel panel-primary">' +
     buildQuestionHeader(withServerPath.condition) +
@@ -185,35 +170,19 @@ function createFilesForCheckboxQuestion(condition, answers, adviser, courseName,
     '   <ul class="list-group">' + withServerPath.answer1 + withServerPath.answer2 + withServerPath.answer3 + withServerPath.answer4 + withServerPath.answer5 +
     '   </ul >' +
     ' </div>' +
-    advicerBlock +
+    buildAdvicer(adviser) +
     '</div>';
 
-  let conditionHTML = '<div class="panel panel-primary">' +
-    buildQuestionHeader(withServerPath.condition) +
-    ' <div class="panel-body">' +
-    '   <ul class="list-group">' + withRelativePath.answer1 + withRelativePath.answer2 + withRelativePath.answer3 + withRelativePath.answer4 + withRelativePath.answer5 +
-    '   </ul >' +
-    ' </div>' +
-    advicerBlock +
-    '</div>';
-
-  return gatherImagesForQuestion(questionFolderPath, fileNames, conditionHTML, previewHTML);
+  return gatherImagesForQuestion(questionFolderPath, fileNames)
+    .then(() => createConditionHtmlFile(questionFolderPath, condition))
+    .then(() => createPreviewHtmlFile(questionFolderPath, previewHTML))
+    .then(() => createFilesForVariants(questionFolderPath, answers));
 }
 
-function createFilesForRelationQuestion(condition, answers, adviser, courseName, labNumber, questionId) {
-  const questionFolderPath = 'public/questions/' + courseName + '/' + labNumber + '/' + questionId;
+function createFilesForRelationQuestion(condition, answers, adviser, questionFolderServerPath, questionFolderPath) {
   const fileNames = getFileNames(condition, answers.answer1.text, answers.answer2.text, answers.answer3.text, answers.answer4.text, answers.answer5.text);
-  const relativePathToImages = 'img/';
-  const serverPathToImages = 'questions/' + courseName + '/' + labNumber + '/' + questionId + '/img/';
+  const serverPathToImages = questionFolderServerPath + '/img/';
 
-  const withRelativePath = {
-    condition: insertImages(condition, relativePathToImages),
-    answer1: '<li class="list-group-item active">' + insertImages(answers.answer1.text, relativePathToImages) + '</li>',
-    answer2: '<li class="list-group-item list-group-item-success">' + insertImages(answers.answer2.text, relativePathToImages) + '</li>',
-    answer3: '<li class="list-group-item list-group-item-info">' + insertImages(answers.answer3.text, relativePathToImages) + '</li>',
-    answer4: '<li class="list-group-item list-group-item-warning">' + insertImages(answers.answer4.text, relativePathToImages) + '</li>',
-    answer5: '<li class="list-group-item list-group-item-danger">' + insertImages(answers.answer5.text, relativePathToImages) + '</li>'
-  };
   const withServerPath = {
     condition: insertImages(condition, serverPathToImages),
     answer1: '<li class="list-group-item active">' + insertImages(answers.answer1.text, serverPathToImages) + '</li>',
@@ -227,7 +196,6 @@ function createFilesForRelationQuestion(condition, answers, adviser, courseName,
     linked4: '<li class="list-group-item list-group-item-warning"> ' + answers.answer4.linked + '</li>',
     linked5: '<li class="list-group-item list-group-item-danger"> ' + answers.answer5.linked + '</li>'
   };
-  const advicerBlock = buildAdvicer(adviser);
 
   let previewHTML = '<div class="panel panel-primary">' +
     buildQuestionHeader(withServerPath.condition) +
@@ -241,12 +209,13 @@ function createFilesForRelationQuestion(condition, answers, adviser, courseName,
     '     </div>' +
     '   </div>' +
     ' </div>' +
-    advicerBlock +
+    buildAdvicer(adviser) +
     '</div>';
 
-  let conditionHTML = '<h1>azaza</h1>';
-
-  return gatherImagesForQuestion(questionFolderPath, fileNames, conditionHTML, previewHTML);
+  return gatherImagesForQuestion(questionFolderPath, fileNames)
+    .then(() => createConditionHtmlFile(questionFolderPath, condition))
+    .then(() => createPreviewHtmlFile(questionFolderPath, previewHTML))
+    .then(() => createFilesForVariants(questionFolderPath, answers));
 }
 
 function wrapContent(body) {
@@ -308,7 +277,7 @@ function getFileNames() {
   return files;
 }
 
-function gatherImagesForQuestion(questionFolderPath, fileNames, conditionHTML, previewHTML) {
+function gatherImagesForQuestion(questionFolderPath, fileNames) {
   return new Promise((resolve, reject) => {
     mkdirp(questionFolderPath, function(err) {
       if (err) {
@@ -318,24 +287,7 @@ function gatherImagesForQuestion(questionFolderPath, fileNames, conditionHTML, p
       return moveFiles(fileNames.map((fileName) => {
         return { from: 'temp-files/' + fileName, to: questionFolderPath + '/img/' + fileName };
       }))
-        .then(() => {
-          return fs.writeFile(questionFolderPath + '/condition.html', wrapContent(conditionHTML), function(err) {
-            if (err) {
-              return reject({ message: 'file was not saved' });
-            }
-
-            return fs.writeFile(questionFolderPath + '/preview.html', wrapContent(previewHTML), function(err) {
-              if (err) {
-                return reject({ message: 'file was not saved' });
-              }
-
-              return resolve();
-            })
-          });
-        })
-        .catch((err) => {
-          rmdir(questionFolderPath, (deleteFolderError) => reject(err));
-        });
+        .then(() => resolve());
     });
   });
 }
@@ -348,4 +300,60 @@ function buildAdvicer(adviser) {
 
 function buildQuestionHeader(condition) {
   return '<div class="panel-heading">' + condition + ' </div>';
+}
+
+function createFilesForVariants(questionFolderPath, answers) {
+  let promiseArr = [];
+
+  for (let i = 1; i <= 5; i++) {
+    promiseArr.push(new Promise((resolve, reject) => {
+      const pathToFile = questionFolderPath + '/var' + i + '.html';
+      const html = '<div>' + insertImages(answers["answer" + i].text) + '</div>';
+
+      return fs.writeFile(pathToFile, html, function(err) {
+        if (err) {
+          return reject({ message: 'file was not saved' });
+        }
+
+        return resolve();
+      });
+    }));
+  }
+  
+  return Promise.all(promiseArr);
+}
+
+function createConditionHtmlFile(questionFolderPath, condition) {
+  const conditionWithImageWithRelativePath = insertImages(condition, 'img/');
+  const conditionHTML = '<div class="panel panel-primary">' + buildQuestionHeader(conditionWithImageWithRelativePath) + '</div>';
+
+  return fs.writeFile(questionFolderPath + '/condition.html', wrapContent(conditionHTML), function(err) {
+    if (err) {
+      return Promise.reject({ message: 'file was not saved' });
+    }
+
+    return Promise.resolve();
+  });
+}
+
+function createPreviewHtmlFile(questionFolderPath, previewHTML) {
+  return fs.writeFile(questionFolderPath + '/preview.html', wrapContent(previewHTML), function(err) {
+    if (err) {
+      return Promise.reject({ message: 'file was not saved' });
+    }
+
+    return Promise.resolve();
+  });
+}
+
+function removeDirectory(path) {
+  return new Promise((resolve, reject) => {
+    rmdir(path, (deleteFolderError) => {
+      if (deleteFolderError) {
+        return reject();
+      }
+
+      return resolve();
+    });
+  });
 }
