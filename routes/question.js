@@ -314,7 +314,7 @@ function createFilesForVariants(questionFolderPath, answers) {
   for (let i = 1; i <= 5; i++) {
     promiseArr.push(new Promise((resolve, reject) => {
       const pathToFile = questionFolderPath + '/var' + i + '.html';
-      const html = '<div>' + insertImages(answers["answer" + i].text) + '</div>';
+      const html = '<div>' + insertImages(answers["answer" + i].text, "img/") + '</div>';
 
       return fs.writeFile(pathToFile, html, function(err) {
         if (err) {
