@@ -316,13 +316,17 @@ function createFilesForVariants(questionFolderPath, answers) {
       const pathToFile = questionFolderPath + '/var' + i + '.html';
       const html = '<div>' + insertImages(answers["answer" + i].text, "img/") + '</div>';
 
-      return fs.writeFile(pathToFile, html, function(err) {
+      return fs.writeFile(pathToFile, wrapWithCharset(html), function(err) {
         if (err) {
           return reject({ message: 'file was not saved' });
         }
 
         return resolve();
       });
+
+      function wrapWithCharset(html) {
+        return '<head><meta charset="utf-8"></head><body>' + html + '</body>'
+      }
     }));
   }
 
