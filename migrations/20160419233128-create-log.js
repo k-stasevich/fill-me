@@ -11,10 +11,7 @@ module.exports = {
       time_begin: { type: Sequelize.DATE },
       time_finish: { type: Sequelize.DATE },
       result: { type: Sequelize.STRING },
-      fk_lab_id: {
-        type: Sequelize.INTEGER, allowNull: false, references: { model: 'lab', key: 'lab_id' },
-        onUpdate: 'CASCADE', onDelete: 'CASCADE'
-      },
+      fk_lab_id: { type: Sequelize.STRING, allowNull: false },
       pc_ip: { type: Sequelize.STRING },
       createdAt: { type: Sequelize.DATE },
       updatedAt: { type: Sequelize.DATE }
