@@ -17,6 +17,7 @@ module.exports = {
     };
 
     if (student) {
+      console.log('%' + student + '%');
       options.include[0].where = {
         fio: { $like: '%' + student + '%' }
       };

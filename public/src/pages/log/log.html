@@ -1,5 +1,21 @@
 <div class="container">
   <div class="row">
+    <form class="form-inline">
+      <div class="form-group col-md-4 col-xs-4">
+        <label>Студент</label>
+        <input type="text" ng-model="log.search.student" class="form-control">
+      </div>
+
+      <div class="form-group col-md-4 col-xs-4">
+        <label>Дата</label>
+        <input type="date" ng-model="log.search.date" class="form-control">
+      </div>
+
+      <button type="button" class="btn btn-primary" ng-click="log.search()">Поиск</button>
+    </form>
+  </div>
+
+  <div class="row">
     <table class="table">
       <thead>
       <tr>
