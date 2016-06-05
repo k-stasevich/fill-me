@@ -33,6 +33,20 @@
           .catch((err) => Promise.reject(err));
       };
 
+      this.updateQuestion = function(questionId, cost) {
+        return ApiService.request('/api/sec/question/' + questionId, 'PUT', { cost: cost })
+          .then((updated) => {
+            const index = questions.findIndex((item) => item.questionId === questionId);
+
+            if (index !== -1) {
+              questions[index] = updated;
+            }
+
+            return questions;
+          })
+          .catch((err) => Promise.reject(err));
+      };
+
       this.getQuestions = function() {
         return questions;
       };

@@ -18,8 +18,20 @@ module.exports = function(app) {
     .get(getQuestions);
 
   app.route('/api/sec/question/:id')
-    .delete(deleteQuestion);
+    .delete(deleteQuestion)
+    .put(updateQuestion);
 };
+
+function updateQuestion(req, res) {
+  const errors = questionValidator.validateForUpdate(req);
+
+  if (errors) {
+    return res.status(400).json({ errors: errors });
+  }
+
+  return questionService.update(req.params.id, req.body.cost)
+    .then((updatedQuestion) => res.json(updatedQuestion));
+}
 
 function createQuestion(req, res) {
   const errors = questionValidator.validateForCreate(req);

@@ -15,6 +15,11 @@ module.exports = {
       .then((createdQuestion) => this.read(createdQuestion.questionId));
   },
 
+  update: function(questionId, cost) {
+    return models.question.update({ cost: cost }, { where: { questionId: questionId } })
+      .then(() => this.read(questionId));
+  },
+
   read: function(id) {
     return models.question.find({
         where: { questionId: id },

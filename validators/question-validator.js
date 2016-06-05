@@ -5,6 +5,13 @@ const ERRORS = require('../constants/error-constants');
 const QUESTION_TYPES = require('../constants/question-type-constants');
 
 module.exports = {
+  validateForUpdate: function(req) {
+    req.checkParams('id', ERRORS.VALIDATION_ERROR).isInt();
+    req.checkBody('cost', ERRORS.RANGE_ERROR).isInt({ min: 1, max: 10 });
+
+    return req.validationErrors();
+  },
+
   validateForCreate: function(req) {
     req.checkBody('courseId', ERRORS.VALIDATION_ERROR).isInt();
     req.checkBody('labId', ERRORS.VALIDATION_ERROR).isInt();

@@ -9,11 +9,22 @@
       <uib-accordion close-others="oneAtATime">
         <uib-accordion-group ng-repeat="lab in question.labs" heading="{{lab.number}}. {{lab.name}}">
           <uib-accordion close-others="oneAtATime">
-            <uib-accordion-group
-              ng-repeat="q in lab.questions" heading="№{{$index + 1}}. Стоимость - {{q.cost}}" ng-init="path = question.pathToCourse + '/' + lab.number + '/' + q.questionId + '/preview.html'">
-              <p>
-                <button ng-click="question.deleteQuestion(q.questionId)" class="btn btn-danger">Удалить вопрос</button>
-              </p>
+            <uib-accordion-group ng-repeat="q in lab.questions" heading="№{{$index + 1}}. Стоимость - {{q.cost}}"
+                                 ng-init="path = question.pathToCourse + '/' + lab.number + '/' + q.questionId + '/preview.html'"
+            >
+              <div class="row">
+                <div class="form-group col-md-4 col-xs-4">
+                  <label>Редактирование стоимости</label>
+                  <input type="text" ng-model="q.cost" class="form-control">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-md-12 col-xs-12">
+                  <button ng-click="question.editQuestion(q.questionId, q.cost)" class="btn btn-primary">Редактировать</button>
+                  <button ng-click="question.deleteQuestion(q.questionId)" class="btn btn-danger">Удалить</button>
+                </div>
+              </div>
 
               <ng-include src="path"></ng-include>
             </uib-accordion-group>
