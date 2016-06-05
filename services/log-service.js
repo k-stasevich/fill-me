@@ -16,6 +16,7 @@ module.exports = {
       })
       .then((log) => {
         log.forEach((item) => {
+          item.dataValues.result = item.dataValues.result === '1' ? 'Зачтено' : 'Не зачтено';
           item.dataValues.timeBegin = moment(item.timeBegin).format('DD-MM-YYYY hh:mm');
           item.dataValues.timeFinish = moment(item.timeFinish).format('DD-MM-YYYY hh:mm');
         });
