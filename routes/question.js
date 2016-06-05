@@ -36,7 +36,7 @@ function createQuestion(req, res) {
   };
 
   if (req.body.questionTypeId === QUESTION_TYPES.INPUT.id) {
-    newQuestion.answer = req.body.answer;
+    newQuestion.answer = req.body.answer.toLowerCase();
   }
 
   if (req.body.questionTypeId === QUESTION_TYPES.CHECKBOX.id) {
