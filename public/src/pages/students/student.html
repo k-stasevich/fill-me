@@ -23,8 +23,6 @@
       <tr>
         <td>ФИО</td>
         <td>Номер группы</td>
-        <td>мин. стоимость</td>
-        <td>макс. стоимость</td>
         <td></td>
       </tr>
       </thead>
@@ -32,8 +30,6 @@
       <tr ng-repeat="stud in student.students">
         <td>{{stud.fio}}</td>
         <td>{{stud.groupNumber}}</td>
-        <td>{{stud.minCost}}</td>
-        <td>{{stud.maxCost}}</td>
         <td><span class="glyphicon glyphicon-remove delete-student" ng-click="student.deleteStudent(stud.studentId)"></span></td>
       </tr>
       </tbody>
